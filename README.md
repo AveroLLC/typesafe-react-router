@@ -2,6 +2,10 @@
 
 A collection of types and utility functions to facilitate typesafe routing in React-Router.
 
+`npm i typesafe-react-router`
+
+![vscode](https://i.imgur.com/WQHOWKx.gif "VSCode")
+
 ## Usage
 
 ```tsx
