@@ -1,0 +1,52 @@
+{
+  "name": "typesafe-react-router",
+  "version": "1.0.0",
+  "description": "Type-safe helpers for React-Router",
+  "main": "./dist/bundle.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "contributors": [
+    {
+      "name": "Kevin Saldaña",
+      "email": "ksaldana@averoinc.com",
+      "url": "https://github.com/ksaldana1"
+    },
+    {
+      "name": "Erin Noe-Payne",
+      "email": "enoepayne@averoinc.com",
+      "url": "https://github.com/autoric"
+    }
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "tsc": "tsc --declaration -outDir compiled",
+    "clean": "rm -rf dist && rm -rf compiled",
+    "copyDeclarations": "cd compiled && find . -name '*.d.ts' | cpio -pdm  ../dist",
+    "prepare": "npm run clean && npm run tsc && rollup -c && npm run copyDeclarations",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.1",
+    "jest": "^23.2.0",
+    "rollup": "^0.61.2",
+    "rollup-plugin-uglify": "^4.0.0",
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
