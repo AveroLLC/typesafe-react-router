@@ -78,18 +78,6 @@ export interface RouteCreator {
     K4 extends PathPart<any>,
     K5 extends PathPart<any>,
     K6 extends PathPart<any>,
-    K7 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5, K6, K7]
-  ): Route<K | K1 | K2 | K3 | K4 | K5 | K6 | K7>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>,
-    K6 extends PathPart<any>,
     K7 extends PathPart<any>,
     K8 extends PathPart<any>
   >(
