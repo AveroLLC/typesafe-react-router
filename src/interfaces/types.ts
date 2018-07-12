@@ -12,32 +12,35 @@
  */
 
 // Interface returned by our RouteCreator function
-export interface Route<Parts extends PathPart<any>> {
+export interface Route<Parts extends Array<PathPart<any>>> {
   // to be passed into react-router's "Route" component
   template(): string;
   // to be passed into react-router's "Link" component
-  create(params: UnionToIntersection<OnlyParams<Parts>>): string;
+  create(
+    params: StringUnionToMap<
+      ParamsFromPathArray<Parts>[Indices<ParamsFromPathArray<Parts>>]
+    >
+  ): string;
 }
 
 export interface PathParam<T extends string> {
   param: T;
 }
 
-// Route consists of tuple of PathParts
 export type PathPart<T extends string> = string | PathParam<T>;
 
-// Pluck only the parameter types from a Route
-export type OnlyParams<T> = T extends PathParam<infer K> ? Record<K, string> : {};
+export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
+  [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
+};
+
+export type ArrayKeys = keyof any[];
+export type Indices<T> = Exclude<keyof T, ArrayKeys>;
+
+export type StringUnionToMap<T extends string> = Record<T, string>;
 
 // Given the parameters of a route I want an object of { paramName: string }
 // e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
 // RouteParams<Route> = { logbookId: string, otherId: string }
 export type RouteParams<T extends Route<any>> = T extends Route<infer X>
-  ? UnionToIntersection<OnlyParams<X>>
+  ? StringUnionToMap<ParamsFromPathArray<X>[Indices<ParamsFromPathArray<X>>]>
   : never;
-
-// Type Utils
-export type GetKeys<U> = U extends Record<infer K, any> ? K : never;
-export type UnionToIntersection<U extends object> = {
-  [K in GetKeys<U>]: U extends Record<K, infer T> ? T : never
-};

@@ -33,7 +33,7 @@
     "rollup": "^0.61.2",
     "rollup-plugin-uglify": "^4.0.0",
     "ts-jest": "^22.4.6",
-    "typescript": "^2.9.2"
+    "typescript": "^3.0.0-rc"
   },
   "jest": {
     "transform": {

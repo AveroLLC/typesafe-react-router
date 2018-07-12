@@ -23,11 +23,11 @@ enum RouteNames {
 }
 
 const Routes = {
-  [RouteNames.HOME]: route(['home']),
-  [RouteNames.VIEW]: route(['view']),
-  [RouteNames.VIEW_DETAILS]: route(['view', param('id')]),
-  [RouteNames.VIEW_MORE_DETAILS]: route(['view', param('id'), 'more', param('otherId')]),
-  [RouteNames.ONLY_PARAM]: route([param('param')]),
+  [RouteNames.HOME]: route('home'),
+  [RouteNames.VIEW]: route('view'),
+  [RouteNames.VIEW_DETAILS]: route('view', param('id')),
+  [RouteNames.VIEW_MORE_DETAILS]: route('view', param('id'), 'more', param('otherId')),
+  [RouteNames.ONLY_PARAM]: route(param('param')),
 };
 
 const expectedTemplate = {
