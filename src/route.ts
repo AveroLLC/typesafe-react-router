@@ -11,13 +11,7 @@
    limitations under the License.
  */
 
-import {
-  PathPart,
-  Route,
-  RouteParams,
-  OnlyParams,
-  ParamsFromPathArray,
-} from './interfaces/types';
+import { PathPart, Route, RouteParams, ParamsFromPathArray } from './interfaces/types';
 import { isParam } from './interfaces/guards';
 import { param } from './param';
 
@@ -46,11 +40,3 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
     },
   };
 };
-
-const routes = {
-  LOGIN: route('login'),
-  VIEW: route('view'),
-  VIEW_DETAILS: route('view', param('details'), param('another')),
-};
-
-const b = routes.VIEW_DETAILS.create({ details: '0' });
