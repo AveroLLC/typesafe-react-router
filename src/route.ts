@@ -11,95 +11,13 @@
    limitations under the License.
  */
 
-import { PathPart, Route } from './interfaces/types';
+import { PathPart, Route, RouteParams, ParamsFromPathArray } from './interfaces/types';
 import { isParam } from './interfaces/guards';
+import { param } from './param';
 
-export interface RouteCreator {
-  <K extends PathPart<any>>(ks: [K]): Route<K>;
-  <K extends PathPart<any>, K1 extends PathPart<string>>(ks: [K, K1]): Route<K | K1>;
-  <K extends PathPart<any>, K1 extends PathPart<any>, K2 extends PathPart<any>>(
-    ks: [K, K1, K2]
-  ): Route<K | K1 | K2>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3]
-  ): Route<K | K1 | K2 | K3>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4]
-  ): Route<K | K1 | K2 | K3 | K4>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5]
-  ): Route<K | K1 | K2 | K3 | K4 | K5>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>,
-    K6 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5, K6]
-  ): Route<K | K1 | K2 | K3 | K4 | K5 | K6>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>,
-    K6 extends PathPart<any>,
-    K7 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5, K6, K7]
-  ): Route<K | K1 | K2 | K3 | K4 | K5 | K6 | K7>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>,
-    K6 extends PathPart<any>,
-    K7 extends PathPart<any>,
-    K8 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5, K6, K7, K8]
-  ): Route<K | K1 | K2 | K3 | K4 | K5 | K6 | K7 | K8>;
-  <
-    K extends PathPart<any>,
-    K1 extends PathPart<any>,
-    K2 extends PathPart<any>,
-    K3 extends PathPart<any>,
-    K4 extends PathPart<any>,
-    K5 extends PathPart<any>,
-    K6 extends PathPart<any>,
-    K7 extends PathPart<any>,
-    K8 extends PathPart<any>,
-    K9 extends PathPart<any>
-  >(
-    ks: [K, K1, K2, K3, K4, K5, K6, K7, K8, K9]
-  ): Route<K | K1 | K2 | K3 | K4 | K5 | K6 | K7 | K8 | K9>;
-}
+export type RouteCreator = <K extends Array<PathPart<any>>>(...args: K) => Route<K>;
 
-export const route: RouteCreator = (pathParts: Array<PathPart<any>>) => {
+export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
   return {
     template: () => {
       return (
