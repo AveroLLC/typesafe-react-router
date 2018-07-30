@@ -18,9 +18,9 @@ export enum RouteNames {
 }
 
 export const Routes = {
-  [RouteNames.HOME]: route(['home']);
-  [RouteNames.VIEW_ALL]: route(['view'])
-  [RouteNames.VIEW_DETAILS]: route(['view', param('id')])
+  [RouteNames.HOME]: route('home');
+  [RouteNames.VIEW_ALL]: route('view')
+  [RouteNames.VIEW_DETAILS]: route('view', param('id'))
 }
 
 const viewDetailsTemplate = Routes[RouteNames.VIEW_DETAILS].template() // -> /view/:id
