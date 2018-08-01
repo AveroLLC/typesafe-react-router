@@ -1,3 +1,7 @@
+import { query } from '../query';
+import { param } from '../param';
+import { route } from '../route';
+
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +23,9 @@ export interface Route<Parts extends Array<PathPart<any>>> {
   create(
     params: StringUnionToMap<
       ParamsFromPathArray<Parts>[Indices<ParamsFromPathArray<Parts>>]
-    >
+    > & {
+      query?: Partial<StringUnionToMap<QueryParamsToMap<QueryFromPathArray<Parts>>>>;
+    }
   ): string;
 }
 
@@ -27,7 +33,11 @@ export interface PathParam<T extends string> {
   param: T;
 }
 
-export type PathPart<T extends string> = string | PathParam<T>;
+export interface QueryParams<T extends string[]> {
+  query: T;
+}
+
+export type PathPart<T extends string> = string | PathParam<T> | QueryParams<T[]>;
 
 export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
   [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
@@ -38,9 +48,10 @@ export type Indices<T> = Exclude<keyof T, ArrayKeys>;
 
 export type StringUnionToMap<T extends string> = Record<T, string>;
 
-// Given the parameters of a route I want an object of { paramName: string }
-// e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
-// RouteParams<Route> = { logbookId: string, otherId: string }
-export type RouteParams<T extends Route<any>> = T extends Route<infer X>
-  ? StringUnionToMap<ParamsFromPathArray<X>[Indices<ParamsFromPathArray<X>>]>
+export type QueryFromPathArray<T extends Array<PathPart<any>>> = {
+  [K in keyof T]: T[K] extends QueryParams<any> ? T[K] : never
+}[Indices<T>];
+
+export type QueryParamsToMap<T> = T extends QueryParams<infer QueryNames>
+  ? QueryNames[number]
   : never;

@@ -1,3 +1,5 @@
+import { QueryParams } from './interfaces/types';
+
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,12 +13,6 @@
    limitations under the License.
  */
 
-import { PathParam, QueryParams } from './types';
-
-export function isParam(i: any): i is PathParam<any> {
-  return i.param != null;
-}
-
-export function isQuery(i: any): i is QueryParams<any> {
-  return i.query != null;
+export function query<T extends string[]>(...t: T): QueryParams<T> {
+  return { query: t };
 }

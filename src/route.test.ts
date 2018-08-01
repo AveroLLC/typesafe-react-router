@@ -13,6 +13,7 @@
 
 import { route } from './route';
 import { param } from './param';
+import { query } from './query';
 
 enum RouteNames {
   HOME = 'HOME',
@@ -25,7 +26,11 @@ enum RouteNames {
 const Routes = {
   [RouteNames.HOME]: route('home'),
   [RouteNames.VIEW]: route('view'),
-  [RouteNames.VIEW_DETAILS]: route('view', param('id')),
+  [RouteNames.VIEW_DETAILS]: route(
+    'view',
+    param('id'),
+    query('dateCreated', 'dateUpdated')
+  ),
   [RouteNames.VIEW_MORE_DETAILS]: route('view', param('id'), 'more', param('otherId')),
   [RouteNames.ONLY_PARAM]: route(param('param')),
 };
@@ -47,7 +52,14 @@ describe('Route', () => {
   test('Create', () => {
     expect(Routes[RouteNames.HOME].create({})).toBe('/home');
     expect(Routes[RouteNames.VIEW].create({})).toBe('/view');
-    expect(Routes[RouteNames.VIEW_DETAILS].create({ id: '3' })).toBe('/view/3');
+    expect(
+      Routes[RouteNames.VIEW_DETAILS].create({
+        id: '3',
+        query: {
+          dateCreated: '1/1/2018',
+        },
+      })
+    ).toBe('/view/3?dateCreated=1/1/2018');
     expect(Routes[RouteNames.VIEW_MORE_DETAILS].create({ id: '3', otherId: '4' })).toBe(
       '/view/3/more/4'
     );

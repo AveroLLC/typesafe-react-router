@@ -11,21 +11,30 @@
    limitations under the License.
  */
 
-import { PathPart, Route, RouteParams, ParamsFromPathArray } from './interfaces/types';
-import { isParam } from './interfaces/guards';
+import { PathPart, Route, ParamsFromPathArray } from './interfaces/types';
+import { isParam, isQuery } from './interfaces/guards';
 import { param } from './param';
+import { query } from './query';
 
 export type RouteCreator = <K extends Array<PathPart<any>>>(...args: K) => Route<K>;
 
 export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
   return {
     template: () => {
-      return (
-        '/' + pathParts.map(part => (isParam(part) ? `:${part.param}` : part)).join('/')
-      );
+      const template =
+        '/' +
+        pathParts
+          .map(part => (isParam(part) ? `:${part.param}` : isQuery(part) ? '' : part))
+          .join('/');
+
+      if (template[template.length - 1] === '/') {
+        return template.slice(0, template.length - 1);
+      }
+      return template;
     },
     create: (params: any) => {
-      return (
+      let queryNames: string[] = [];
+      const basePath =
         '/' +
         pathParts
           .map(part => {
@@ -33,9 +42,30 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
               const { param } = part;
               return params[param];
             }
+            if (isQuery(part)) {
+              queryNames = part.query;
+              return '';
+            }
             return part;
           })
-          .join('/')
+          .join('/');
+
+      const sanitizedPath = basePath.slice(0, basePath.length - 1);
+      if (basePath[basePath.length - 1] === '/' && queryNames.length === 0) {
+        return sanitizedPath;
+      }
+      if (queryNames.length === 0) {
+        return basePath;
+      }
+      const queryParams: Array<[string, string]> = Object.entries(params.query);
+      return (
+        sanitizedPath +
+        '?' +
+        queryParams
+          .map(([k, v]) => {
+            return `${k}=${v}`;
+          })
+          .join('&')
       );
     },
   };
