@@ -25,10 +25,12 @@
     "clean": "rm -rf dist && rm -rf compiled",
     "copyDeclarations": "cd compiled && find . -name '*.d.ts' | cpio -pdm  ../dist",
     "prepare": "npm run clean && npm run tsc && rollup -c && npm run copyDeclarations",
-    "test": "jest"
+    "test": "jest",
+    "test::types": "dtslint spec-dtslint"
   },
   "devDependencies": {
     "@types/jest": "^23.1.1",
+    "dtslint": "^0.3.0",
     "jest": "^23.2.0",
     "rollup": "^0.61.2",
     "rollup-plugin-uglify": "^4.0.0",

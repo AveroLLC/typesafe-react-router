@@ -33,6 +33,10 @@ export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
   [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
 };
 
+export type ParamsFromRoute<T> = T extends Route<infer Parts>
+  ? ParamsFromPathArray<Parts>
+  : never;
+
 export type ArrayKeys = keyof any[];
 export type Indices<T> = Exclude<keyof T, ArrayKeys>;
 
