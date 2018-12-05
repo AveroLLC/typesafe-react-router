@@ -1,4 +1,4 @@
-import { QueryParams } from './interfaces/types';
+import { QueryParam } from './interfaces/types';
 
 /*
    Copyright Avero, LLC
@@ -13,6 +13,6 @@ import { QueryParams } from './interfaces/types';
    limitations under the License.
  */
 
-export function query<T extends string[]>(...t: T): QueryParams<T> {
+export function query<T extends string[]>(...t: T): QueryParam<T> {
   return { query: t };
 }

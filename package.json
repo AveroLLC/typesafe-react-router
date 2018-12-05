@@ -54,6 +54,8 @@
     ]
   },
   "dependencies": {
-    "lodash.map": "^4.6.0"
+    "@types/query-string": "^6.1.1",
+    "lodash.map": "^4.6.0",
+    "query-string": "^6.2.0"
   }
 }

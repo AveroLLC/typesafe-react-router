@@ -11,12 +11,12 @@
    limitations under the License.
  */
 
-import { PathParam, QueryParams } from './types';
+import { PathParam, QueryParam } from './types';
 
 export function isParam(i: any): i is PathParam<any> {
   return i.param != null;
 }
 
-export function isQuery(i: any): i is QueryParams<any> {
+export function isQuery(i: any): i is QueryParam<any> {
   return i.query != null;
 }

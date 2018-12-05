@@ -33,11 +33,11 @@ export interface PathParam<T extends string> {
   param: T;
 }
 
-export interface QueryParams<T extends string[]> {
+export interface QueryParam<T extends string[]> {
   query: T;
 }
 
-export type PathPart<T extends string> = string | PathParam<T> | QueryParams<T[]>;
+export type PathPart<T extends string> = string | PathParam<T> | QueryParam<T[]>;
 
 export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
   [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
@@ -49,9 +49,17 @@ export type Indices<T> = Exclude<keyof T, ArrayKeys>;
 export type StringUnionToMap<T extends string> = Record<T, string>;
 
 export type QueryFromPathArray<T extends Array<PathPart<any>>> = {
-  [K in keyof T]: T[K] extends QueryParams<any> ? T[K] : never
+  [K in keyof T]: T[K] extends QueryParam<any> ? T[K] : never
 }[Indices<T>];
 
-export type QueryParamsToMap<T> = T extends QueryParams<infer QueryNames>
+export type QueryParamsToMap<T> = T extends QueryParam<infer QueryNames>
   ? QueryNames[number]
+  : never;
+
+export type RouteParams<T extends Route<any>> = T extends Route<infer X>
+  ? StringUnionToMap<ParamsFromPathArray<X>[Indices<ParamsFromPathArray<X>>]>
+  : never;
+
+export type QueryParamsFromRoute<T extends Route<any>> = T extends Route<infer X>
+  ? StringUnionToMap<QueryParamsToMap<QueryFromPathArray<X>>>
   : never;

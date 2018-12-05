@@ -14,6 +14,8 @@
 import { route } from './route';
 import { param } from './param';
 import { query } from './query';
+import { parse } from './parse';
+import { QueryParamsFromRoute, QueryFromPathArray } from './interfaces/types';
 
 enum RouteNames {
   HOME = 'HOME',

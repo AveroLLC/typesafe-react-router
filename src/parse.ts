@@ -11,8 +11,11 @@
    limitations under the License.
  */
 
-export * from './route';
-export * from './param';
-export * from './parse';
-export * from './interfaces/guards';
-export * from './interfaces/types';
+import { Route, QueryParamsFromRoute } from './interfaces/types';
+import { parse as qsParse } from 'query-string';
+
+export function parse<T extends Route<any>>(
+  queryString: string
+): Partial<QueryParamsFromRoute<T>> {
+  return qsParse(queryString) as Partial<QueryParamsFromRoute<T>>;
+}
