@@ -30,6 +30,7 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
       if (template[template.length - 1] === '/') {
         return template.slice(0, template.length - 1);
       }
+
       return template;
     },
     create: (params: any) => {
@@ -58,15 +59,16 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
         return basePath;
       }
       const queryParams: Array<[string, string]> = Object.entries(params.query);
-      return (
+      const path =
         sanitizedPath +
         '?' +
         queryParams
           .map(([k, v]) => {
             return `${k}=${v}`;
           })
-          .join('&')
-      );
+          .join('&');
+
+      return path;
     },
   };
 };
