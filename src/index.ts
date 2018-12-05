@@ -13,6 +13,7 @@
 
 export * from './route';
 export * from './param';
+export * from './query';
 export * from './parse';
 export * from './interfaces/guards';
 export * from './interfaces/types';
