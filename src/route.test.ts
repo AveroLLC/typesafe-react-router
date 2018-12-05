@@ -23,6 +23,7 @@ enum RouteNames {
   VIEW_DETAILS = 'VIEW_DETAILS',
   VIEW_MORE_DETAILS = 'VIEW_MORE_DETAILS',
   ONLY_PARAM = 'ONLY_PARAM',
+  TEST = 'TEST',
 }
 
 const Routes = {
@@ -35,6 +36,16 @@ const Routes = {
   ),
   [RouteNames.VIEW_MORE_DETAILS]: route('view', param('id'), 'more', param('otherId')),
   [RouteNames.ONLY_PARAM]: route(param('param')),
+  [RouteNames.TEST]: route(
+    'fcm',
+    'inventory',
+    'counts',
+    'kitchen',
+    param('kitchenId'),
+    'count',
+    param('countId'),
+    query('sp', 'sd')
+  ),
 };
 
 const expectedTemplate = {

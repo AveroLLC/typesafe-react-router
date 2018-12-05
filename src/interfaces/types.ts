@@ -27,6 +27,8 @@ export interface Route<Parts extends Array<PathPart<any>>> {
       query?: Partial<StringUnionToMap<QueryParamsToMap<QueryFromPathArray<Parts>>>>;
     }
   ): string;
+
+  parse(queryString: string): Partial<QueryParamsFromRoute<Route<Parts>>>;
 }
 
 export interface PathParam<T extends string> {

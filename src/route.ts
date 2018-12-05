@@ -11,10 +11,11 @@
    limitations under the License.
  */
 
-import { PathPart, Route, ParamsFromPathArray } from './interfaces/types';
+import { PathPart, Route, QueryParamsFromRoute } from './interfaces/types';
 import { isParam, isQuery } from './interfaces/guards';
 import { param } from './param';
 import { query } from './query';
+import { parse } from './parse';
 
 export type RouteCreator = <K extends Array<PathPart<any>>>(...args: K) => Route<K>;
 
@@ -69,6 +70,9 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
           .join('&');
 
       return path;
+    },
+    parse: (queryString: string) => {
+      return parse(queryString) as Partial<QueryParamsFromRoute<Route<typeof pathParts>>>;
     },
   };
 };
