@@ -1,6 +1,6 @@
 {
   "name": "typesafe-react-router",
-  "version": "2.1.1-0",
+  "version": "2.1.1-1",
   "description": "Type-safe helpers for React-Router",
   "main": "./dist/bundle.js",
   "types": "./dist/index.d.ts",
