@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/jest": "^23.1.1",
+    "@types/query-string": "^6.1.1",
     "jest": "^23.2.0",
     "ts-jest": "^22.4.6",
     "typescript": "^3.0.1"
@@ -48,5 +49,8 @@
       "json",
       "node"
     ]
+  },
+  "dependencies": {
+    "query-string": "^6.2.0"
   }
 }

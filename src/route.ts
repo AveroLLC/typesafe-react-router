@@ -11,15 +11,18 @@
    limitations under the License.
  */
 
-import { PathPart, Route, RouteParams, ParamsFromPathArray } from './interfaces/types';
+import { PathPart, Route } from './interfaces/types';
 import { isParam } from './interfaces/guards';
+import { parse as _parse } from './parse';
 
 export type RouteCreator = <K extends Array<PathPart<any>>, Q extends Array<string> = []>(
   ...args: K
 ) => Route<K, Q>;
 
 export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
-  return _routeCreator(pathParts, []);
+  // ts was yelling about this array as a never[]?
+  const emptyArr: string[] = [];
+  return _routeCreator(pathParts, emptyArr);
 };
 
 function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> = []>(
@@ -60,6 +63,9 @@ function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> =
     },
     withQueryParams: <TQueryParams extends string[]>(...params: TQueryParams) => {
       return _routeCreator(pathParts, [...params, ...queryParams]);
+    },
+    parse: (queryString: string) => {
+      return _parse(queryString);
     },
   };
 }

@@ -25,6 +25,8 @@ export interface Route<
   withQueryParams: <T extends string[]>(
     ...params: T
   ) => Route<Parts, [QueryParams[number] | T[number]]>;
+
+  parse(queryString: string): Partial<Record<QueryParams[number], string>>;
 }
 
 export interface PathParam<T extends string> {
