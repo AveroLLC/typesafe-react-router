@@ -1,6 +1,8 @@
 node_modules
 .idea
 .vscode
-dist
+dest
 compiled
 .DS_Store
+
+*.tgz
