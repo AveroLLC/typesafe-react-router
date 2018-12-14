@@ -13,11 +13,19 @@
 
 import { PathPart, Route, RouteParams, ParamsFromPathArray } from './interfaces/types';
 import { isParam } from './interfaces/guards';
-import { param } from './param';
 
-export type RouteCreator = <K extends Array<PathPart<any>>>(...args: K) => Route<K>;
+export type RouteCreator = <K extends Array<PathPart<any>>, Q extends Array<string> = []>(
+  ...args: K
+) => Route<K, Q>;
 
 export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
+  return _routeCreator(pathParts, []);
+};
+
+function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> = []>(
+  pathParts: Array<PathPart<any>>,
+  queryParams: Q
+): Route<T, Q> {
   return {
     template: () => {
       return (
@@ -25,7 +33,7 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
       );
     },
     create: (params: any) => {
-      return (
+      const baseUrl =
         '/' +
         pathParts
           .map(part => {
@@ -35,8 +43,23 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
             }
             return part;
           })
-          .join('/')
-      );
+          .join('/');
+
+      if (!params.query || Object.keys(params.query).length === 0) {
+        return baseUrl;
+      }
+
+      const queryParams: Array<[string, string]> = Object.entries(params.query) || null;
+      const queryString = queryParams
+        .map(([k, v]) => {
+          return `${k}=${v}`;
+        })
+        .join('&');
+
+      return queryString === '' ? baseUrl : `${baseUrl}?${queryString}`;
+    },
+    withQueryParams: <TQueryParams extends string[]>(...params: TQueryParams) => {
+      return _routeCreator(pathParts, [...params, ...queryParams]);
     },
   };
-};
+}

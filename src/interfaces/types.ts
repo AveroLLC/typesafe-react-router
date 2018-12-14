@@ -11,16 +11,20 @@
    limitations under the License.
  */
 
-// Interface returned by our RouteCreator function
-export interface Route<Parts extends Array<PathPart<any>>> {
-  // to be passed into react-router's "Route" component
+export interface Route<
+  Parts extends Array<PathPart<any>>,
+  QueryParams extends string[] = []
+> {
   template(): string;
-  // to be passed into react-router's "Link" component
+
   create(
-    params: StringUnionToMap<
-      ParamsFromPathArray<Parts>[Indices<ParamsFromPathArray<Parts>>]
-    >
+    params: Record<ParamsFromPathArray<Parts>[number], string> &
+      Partial<{ query: Partial<Record<QueryParams[number], string>> }>
   ): string;
+
+  withQueryParams: <T extends string[]>(
+    ...params: T
+  ) => Route<Parts, [QueryParams[number] | T[number]]>;
 }
 
 export interface PathParam<T extends string> {
@@ -33,14 +37,9 @@ export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
   [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
 };
 
-export type ArrayKeys = keyof any[];
-export type Indices<T> = Exclude<keyof T, ArrayKeys>;
-
-export type StringUnionToMap<T extends string> = Record<T, string>;
-
 // Given the parameters of a route I want an object of { paramName: string }
 // e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
 // RouteParams<Route> = { logbookId: string, otherId: string }
 export type RouteParams<T extends Route<any>> = T extends Route<infer X>
-  ? StringUnionToMap<ParamsFromPathArray<X>[Indices<ParamsFromPathArray<X>>]>
+  ? Record<ParamsFromPathArray<X>[number], string>
   : never;
