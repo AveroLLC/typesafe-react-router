@@ -2,10 +2,10 @@
   "name": "typesafe-react-router",
   "version": "2.1.0",
   "description": "Type-safe helpers for React-Router",
-  "main": "./dist/bundle.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dest/bundle.js",
+  "types": "./dest/index.d.ts",
   "files": [
-    "dist"
+    "dest"
   ],
   "contributors": [
     {
@@ -21,17 +21,14 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "tsc": "tsc --declaration -outDir compiled",
-    "clean": "rm -rf dist && rm -rf compiled",
-    "copyDeclarations": "cd compiled && find . -name '*.d.ts' | cpio -pdm  ../dist",
-    "prepare": "npm run clean && npm run tsc && rollup -c && npm run copyDeclarations",
+    "tsc": "tsc --declaration -outDir dest",
+    "clean": "rm -rf dest",
+    "prepare": "npm run clean && npm run tsc",
     "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "jest": "^23.2.0",
-    "rollup": "^0.61.2",
-    "rollup-plugin-uglify": "^4.0.0",
     "ts-jest": "^22.4.6",
     "typescript": "^3.0.1"
   },
