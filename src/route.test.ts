@@ -119,7 +119,47 @@ describe('Route', () => {
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
         id: '1',
+        query: {
+          dateCreated: '1/1/2018',
+        },
+      })
+    ).toBe('/1?dateCreated=1/1/2018');
+
+    expect(
+      Routes[RouteNames.MULTI_QUERY].create({
+        id: '1',
       })
     ).toBe('/1');
+  });
+
+  test('parse', () => {
+    expect(Routes[RouteNames.WITH_QUERY].parse('?dateCreated=1/1/2018')).toEqual({
+      dateCreated: '1/1/2018',
+    });
+
+    expect(
+      Routes[RouteNames.MULTI_CALL_QUERY].parse(
+        '?dateCreated=1/1/2018&dateUpdated=2/1/2018'
+      )
+    ).toEqual({
+      dateCreated: '1/1/2018',
+      dateUpdated: '2/1/2018',
+    });
+
+    expect(Routes[RouteNames.MULTI_CALL_QUERY].parse('?dateCreated=1/1/2018')).toEqual({
+      dateCreated: '1/1/2018',
+      dateUpdated: undefined,
+    });
+
+    // parse will return back any extra things found in the query string, but they will not be accessible
+    // due to the restrictions we place on the return type
+    expect(
+      Routes[RouteNames.MULTI_CALL_QUERY].parse('?garbage=1/1/2018&garbage2=2/1/2018')
+    ).toEqual({
+      dateCreated: undefined,
+      dateUpdated: undefined,
+      garbage: '1/1/2018',
+      garbage2: '2/1/2018',
+    });
   });
 });

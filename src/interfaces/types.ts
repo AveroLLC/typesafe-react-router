@@ -1,3 +1,6 @@
+import { route } from '../route';
+import { param } from '../param';
+
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +28,8 @@ export interface Route<
   withQueryParams: <T extends string[]>(
     ...params: T
   ) => Route<Parts, [QueryParams[number] | T[number]]>;
+
+  parse(queryString: string): Partial<Record<QueryParams[number], string>>;
 }
 
 export interface PathParam<T extends string> {
@@ -40,6 +45,6 @@ export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
 // Given the parameters of a route I want an object of { paramName: string }
 // e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
 // RouteParams<Route> = { logbookId: string, otherId: string }
-export type RouteParams<T extends Route<any>> = T extends Route<infer X>
+export type RouteParams<T extends Route<any, any>> = T extends Route<infer X, any>
   ? Record<ParamsFromPathArray<X>[number], string>
   : never;
