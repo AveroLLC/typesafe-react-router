@@ -1,6 +1,6 @@
 {
   "name": "typesafe-react-router",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
