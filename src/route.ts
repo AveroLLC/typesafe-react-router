@@ -54,6 +54,7 @@ function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> =
 
       const queryParams: Array<[string, string]> = Object.entries(params.query) || null;
       const queryString = queryParams
+        .filter(([k, v]) => v != null)
         .map(([k, v]) => {
           return `${k}=${v}`;
         })

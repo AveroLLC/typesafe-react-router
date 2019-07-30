@@ -120,6 +120,16 @@ describe('Route', () => {
       Routes[RouteNames.MULTI_QUERY].create({
         id: '1',
         query: {
+          dateCreated: null,
+          dateUpdated: undefined,
+        },
+      })
+    ).toBe('/1');
+
+    expect(
+      Routes[RouteNames.MULTI_QUERY].create({
+        id: '1',
+        query: {
           dateCreated: '1/1/2018',
         },
       })
