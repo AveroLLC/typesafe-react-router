@@ -11,7 +11,7 @@
    limitations under the License.
  */
 
-import { parse as qsParse } from 'query-string';
+import { parse as qsParse } from "query-string";
 
 export function parse<TQueryParams extends string[]>(
   queryString: string

@@ -13,7 +13,7 @@
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries#Polyfill
 if (!Object.entries) {
-  Object.entries = function(obj: any) {
+  Object.entries = function (obj: any) {
     var ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
@@ -23,7 +23,7 @@ if (!Object.entries) {
   };
 }
 
-export * from './route';
-export * from './param';
-export * from './interfaces/guards';
-export * from './interfaces/types';
+export * from "./route";
+export * from "./param";
+export * from "./interfaces/guards";
+export * from "./interfaces/types";

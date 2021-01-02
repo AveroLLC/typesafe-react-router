@@ -11,7 +11,7 @@
    limitations under the License.
  */
 
-import { PathParam } from './interfaces/types';
+import { PathParam } from "./interfaces/types";
 
 export function param<T extends string>(t: T): PathParam<T> {
   return { param: t };

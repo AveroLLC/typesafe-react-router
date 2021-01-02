@@ -11,11 +11,14 @@
    limitations under the License.
  */
 
-import { PathPart, Route } from './interfaces/types';
-import { isParam } from './interfaces/guards';
-import { parse as _parse } from './parse';
+import { PathPart, Route } from "./interfaces/types";
+import { isParam } from "./interfaces/guards";
+import { parse as _parse } from "./parse";
 
-export type RouteCreator = <K extends Array<PathPart<any>>, Q extends Array<string> = []>(
+export type RouteCreator = <
+  K extends Array<PathPart<any>>,
+  Q extends Array<string> = []
+>(
   ...args: K
 ) => Route<K, Q>;
 
@@ -25,44 +28,50 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
   return _routeCreator(pathParts, emptyArr);
 };
 
-function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> = []>(
-  pathParts: Array<PathPart<any>>,
-  queryParams: Q
-): Route<T, Q> {
+function _routeCreator<
+  T extends Array<PathPart<any>>,
+  Q extends Array<string> = []
+>(pathParts: Array<PathPart<any>>, queryParams: Q): Route<T, Q> {
   return {
     template: () => {
       return (
-        '/' + pathParts.map(part => (isParam(part) ? `:${part.param}` : part)).join('/')
+        "/" +
+        pathParts
+          .map((part) => (isParam(part) ? `:${part.param}` : part))
+          .join("/")
       );
     },
     create: (params: any) => {
       const baseUrl =
-        '/' +
+        "/" +
         pathParts
-          .map(part => {
+          .map((part) => {
             if (isParam(part)) {
               const { param } = part;
               return params[param];
             }
             return part;
           })
-          .join('/');
+          .join("/");
 
       if (!params.query || Object.keys(params.query).length === 0) {
         return baseUrl;
       }
 
-      const queryParams: Array<[string, string]> = Object.entries(params.query) || null;
+      const queryParams: Array<[string, string]> =
+        Object.entries(params.query) || null;
       const queryString = queryParams
         .filter(([k, v]) => v != null)
         .map(([k, v]) => {
           return `${k}=${v}`;
         })
-        .join('&');
+        .join("&");
 
-      return queryString === '' ? baseUrl : `${baseUrl}?${queryString}`;
+      return queryString === "" ? baseUrl : `${baseUrl}?${queryString}`;
     },
-    withQueryParams: <TQueryParams extends string[]>(...params: TQueryParams) => {
+    withQueryParams: <TQueryParams extends string[]>(
+      ...params: TQueryParams
+    ) => {
       return _routeCreator(pathParts, [...params, ...queryParams]);
     },
     parse: (queryString: string) => {
