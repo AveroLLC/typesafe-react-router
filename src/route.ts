@@ -41,7 +41,7 @@ function _routeCreator<
           .join("/")
       );
     },
-    create: (params: any) => {
+    create: (params: Record<any, any> = {}) => {
       const baseUrl =
         "/" +
         pathParts
