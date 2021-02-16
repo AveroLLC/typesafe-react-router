@@ -1,6 +1,6 @@
 {
-  "name": "typesafe-react-router",
-  "version": "2.2.4",
+  "name": "react-route-type",
+  "version": "0.0.1",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
@@ -23,7 +23,7 @@
   "scripts": {
     "tsc": "tsc --declaration -outDir dest",
     "clean": "rm -rf dest",
-    "prepare": "npm run clean && npm run tsc",
+    "prepare": "yarn clean && yarn tsc",
     "test": "jest"
   },
   "devDependencies": {
