@@ -1,3 +1,5 @@
+import { useLocation, useParams } from "react-router-dom";
+
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -83,6 +85,14 @@ function _routeCreator<
     },
     parse: (queryString: string) => {
       return _parse(queryString);
+    },
+    /**
+     * A react hook to get query params
+     */
+    useQueryParams(): Partial<Record<Q[number], string>> {
+      return Object.fromEntries(
+        new URLSearchParams(useLocation().search).entries()
+      ) as any;
     },
   };
 }

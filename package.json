@@ -29,9 +29,10 @@
   "devDependencies": {
     "@types/jest": "^23.1.1",
     "@types/query-string": "^5.1.0",
+    "@types/react-router-dom": "^5.1.7",
     "jest": "^23.2.0",
-    "ts-jest": "^22.4.6",
     "prettier": "^2.2.1",
+    "ts-jest": "^22.4.6",
     "typescript": "^3.0.1"
   },
   "peerDependencies": {
@@ -52,6 +53,7 @@
     ]
   },
   "dependencies": {
-    "query-string": "^5.1.1"
+    "query-string": "^5.1.1",
+    "react-router-dom": "^5.2.0"
   }
 }
