@@ -21,7 +21,7 @@ export interface Route<
   template(): string;
 
   create(
-    params: Record<ParamsFromPathArray<Parts>[number], string> &
+    params?: Record<ParamsFromPathArray<Parts>[number], string> &
       Partial<{ query: Partial<Record<QueryParams[number], string>> }>
   ): string;
 
