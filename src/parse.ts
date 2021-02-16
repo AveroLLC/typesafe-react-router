@@ -11,10 +11,13 @@
    limitations under the License.
  */
 
-import { parse as qsParse } from "query-string";
+import { parse as qsParse } from "qs";
 
 export function parse<TQueryParams extends string[]>(
   queryString: string
 ): Partial<Record<TQueryParams[number], string>> {
+  queryString = queryString.startsWith("?")
+    ? queryString.slice(1)
+    : queryString;
   return qsParse(queryString) as Partial<Record<TQueryParams[number], string>>;
 }

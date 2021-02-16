@@ -129,7 +129,7 @@ describe("Route", () => {
           dateUpdated: undefined,
         },
       })
-    ).toBe("/1");
+    ).toBe("/1?dateCreated=");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({

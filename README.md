@@ -61,3 +61,17 @@ export class Home extends React.PureComponent {
   }
 }
 ```
+
+## useQueryParams
+
+A react hook to get query params
+
+## useParams
+
+Used `react-router-dom` useParams just types is assigned
+https://github.com/ReactTraining/react-router/tree/master/packages/react-router-dom
+
+## Parse
+
+Used 'qs' module for parse and stringify params without decode
+https://github.com/ljharb/qs
