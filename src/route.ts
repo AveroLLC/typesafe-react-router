@@ -28,6 +28,10 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
   return _routeCreator(pathParts, emptyArr);
 };
 
+function getPathBegin(pathParts: Array<PathPart<any>>) {
+  return pathParts[0] === "*" ? "" : "/";
+}
+
 function _routeCreator<
   T extends Array<PathPart<any>>,
   Q extends Array<string> = []
@@ -35,7 +39,7 @@ function _routeCreator<
   return {
     template: () => {
       return (
-        "/" +
+        getPathBegin(pathParts) +
         pathParts
           .map((part) => (isParam(part) ? `:${part.param}` : part))
           .join("/")
@@ -43,9 +47,12 @@ function _routeCreator<
     },
     create: (params: Record<any, any> = {}) => {
       const baseUrl =
-        "/" +
+        getPathBegin(pathParts) +
         pathParts
           .map((part) => {
+            if (part === "*") {
+              return location.pathname;
+            }
             if (isParam(part)) {
               const { param } = part;
               return params[param];
