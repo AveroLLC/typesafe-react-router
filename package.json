@@ -1,6 +1,6 @@
 {
   "name": "react-route-type",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
