@@ -1,6 +1,6 @@
 {
   "name": "react-route-type",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
@@ -35,9 +35,9 @@
     "@types/jest": "^23.1.1",
     "@types/qs": "^6.9.5",
     "@types/react-router-dom": "^5.1.7",
-    "react": "^17.0.1",
     "jest": "^23.2.0",
     "prettier": "^2.2.1",
+    "react": "^17.0.1",
     "ts-jest": "^22.4.6",
     "typescript": "^4.1.5"
   },
