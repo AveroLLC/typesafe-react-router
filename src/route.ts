@@ -18,14 +18,12 @@ import { isParam } from "./interfaces/guards";
 import { parse as _parse } from "./parse";
 import { stringify } from "qs";
 
-export type RouteCreator = <
+export const route = <
   K extends Array<PathPart<any>>,
   Q extends Array<string> = []
 >(
-  ...args: K
-) => Route<K, Q>;
-
-export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
+  ...pathParts: K
+): Route<K, Q> => {
   // ts was yelling about this array as a never[]?
   const emptyArr: string[] = [];
   return _routeCreator(pathParts, emptyArr);

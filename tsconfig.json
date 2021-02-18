@@ -55,6 +55,7 @@
   },
   "exclude": [
     "node_modules",
+    "dest",
     "**/*.test.ts"
   ]
 }

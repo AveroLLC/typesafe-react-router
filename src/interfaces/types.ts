@@ -36,19 +36,33 @@ export interface Route<
   useParams(): Record<ParamsFromPathArray<Parts>[number], string>;
 }
 
+/**
+ * @ignore
+ */
 export interface PathParam<T extends string> {
   param: T;
 }
 
+/**
+ * @ignore
+ */
 export type PathPart<T extends string> = string | PathParam<T>;
 
+/**
+ * @ignore
+ */
 export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
   [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never;
 };
 
-// Given the parameters of a route I want an object of { paramName: string }
-// e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
-// RouteParams<Route> = { logbookId: string, otherId: string }
+/**
+ * Given the parameters of a route I want an object of { paramName: string }
+ * ```js
+ * const Route = route(['logbook', param('logbookId'), param('otherId')]);
+ * RouteParams<Route> = { logbookId: string, otherId: string }
+ * ```
+ * @ignore
+ */
 export type RouteParams<T extends Route<any, any>> = T extends Route<
   infer X,
   any
