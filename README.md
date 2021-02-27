@@ -1,16 +1,22 @@
-# Typesafe-React-Router
+# react-route-type
 
 A collection of types and utility functions to facilitate typesafe routing in React-Router.
 
-`npm i typesafe-react-router`
+npm
+
+`npm i react-route-type`
+
+yarn
+
+`yarn add react-route-type`
 
 ![vscode](https://i.imgur.com/WQHOWKx.gif "VSCode")
-Note: This gif is using the 1.0 array-style API, rather than spread arguments used in 2.0. 
+Note: This gif is using the 1.0 array-style API, rather than spread arguments used in 2.0.
 
 ## Usage
 
 ```tsx
-import { route, param } from 'typesafe-react-router';
+import { route, param } from 'react-route-type';
 
 export enum RouteNames {
   HOME = "HOME"
@@ -55,3 +61,17 @@ export class Home extends React.PureComponent {
   }
 }
 ```
+
+## useQueryParams
+
+A react hook to get query params
+
+## useParams
+
+Used `react-router-dom` useParams just types is assigned
+https://github.com/ReactTraining/react-router/tree/master/packages/react-router-dom
+
+## Parse
+
+Used 'qs' module for parse and stringify params without decode
+https://github.com/ljharb/qs

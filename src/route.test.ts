@@ -11,165 +11,176 @@
    limitations under the License.
  */
 
-import { route } from './route';
-import { param } from './param';
+import { route } from "./route";
+import { param } from "./param";
 
 enum RouteNames {
-  HOME = 'HOME',
-  VIEW = 'VIEW',
-  VIEW_DETAILS = 'VIEW_DETAILS',
-  VIEW_MORE_DETAILS = 'VIEW_MORE_DETAILS',
-  ONLY_PARAM = 'ONLY_PARAM',
-  WITH_QUERY = 'WITH_QUERY',
-  EMPTY_QUERY = 'EMPTY_QUERY',
-  MULTI_CALL_QUERY = 'MULTI_CALL_QUERY',
-  MULTI_QUERY = 'MULTI_QUERY',
+  HOME = "HOME",
+  VIEW = "VIEW",
+  VIEW_DETAILS = "VIEW_DETAILS",
+  VIEW_MORE_DETAILS = "VIEW_MORE_DETAILS",
+  ONLY_PARAM = "ONLY_PARAM",
+  WITH_QUERY = "WITH_QUERY",
+  EMPTY_QUERY = "EMPTY_QUERY",
+  MULTI_CALL_QUERY = "MULTI_CALL_QUERY",
+  MULTI_QUERY = "MULTI_QUERY",
 }
 
 const Routes = {
-  [RouteNames.HOME]: route('home'),
-  [RouteNames.VIEW]: route('view'),
-  [RouteNames.VIEW_DETAILS]: route('view', param('id')),
-  [RouteNames.VIEW_MORE_DETAILS]: route('view', param('id'), 'more', param('otherId')),
-  [RouteNames.ONLY_PARAM]: route(param('param')),
-  [RouteNames.WITH_QUERY]: route(param('id')).withQueryParams('dateCreated'),
-  [RouteNames.EMPTY_QUERY]: route(param('id')).withQueryParams(),
-  [RouteNames.MULTI_CALL_QUERY]: route(param('id'))
-    .withQueryParams('dateCreated')
-    .withQueryParams('dateUpdated'),
-  [RouteNames.MULTI_QUERY]: route(param('id')).withQueryParams(
-    'dateCreated',
-    'dateUpdated'
+  [RouteNames.HOME]: route("home"),
+  [RouteNames.VIEW]: route("view"),
+  [RouteNames.VIEW_DETAILS]: route("view", param("id")),
+  [RouteNames.VIEW_MORE_DETAILS]: route(
+    "view",
+    param("id"),
+    "more",
+    param("otherId")
+  ),
+  [RouteNames.ONLY_PARAM]: route(param("param")),
+  [RouteNames.WITH_QUERY]: route(param("id")).withQueryParams("dateCreated"),
+  [RouteNames.EMPTY_QUERY]: route(param("id")).withQueryParams(),
+  [RouteNames.MULTI_CALL_QUERY]: route(param("id"))
+    .withQueryParams("dateCreated")
+    .withQueryParams("dateUpdated"),
+  [RouteNames.MULTI_QUERY]: route(param("id")).withQueryParams(
+    "dateCreated",
+    "dateUpdated"
   ),
 };
 
 const expectedTemplate = {
-  [RouteNames.HOME]: '/home',
-  [RouteNames.VIEW]: '/view',
-  [RouteNames.VIEW_DETAILS]: '/view/:id',
-  [RouteNames.VIEW_MORE_DETAILS]: '/view/:id/more/:otherId',
-  [RouteNames.ONLY_PARAM]: '/:param',
-  [RouteNames.WITH_QUERY]: '/:id',
-  [RouteNames.EMPTY_QUERY]: '/:id',
-  [RouteNames.MULTI_CALL_QUERY]: '/:id',
-  [RouteNames.MULTI_QUERY]: '/:id',
+  [RouteNames.HOME]: "/home",
+  [RouteNames.VIEW]: "/view",
+  [RouteNames.VIEW_DETAILS]: "/view/:id",
+  [RouteNames.VIEW_MORE_DETAILS]: "/view/:id/more/:otherId",
+  [RouteNames.ONLY_PARAM]: "/:param",
+  [RouteNames.WITH_QUERY]: "/:id",
+  [RouteNames.EMPTY_QUERY]: "/:id",
+  [RouteNames.MULTI_CALL_QUERY]: "/:id",
+  [RouteNames.MULTI_QUERY]: "/:id",
 };
 
-describe('Route', () => {
-  test('Template', () => {
-    Object.keys(Routes).forEach(k => {
+describe("Route", () => {
+  test("Template", () => {
+    Object.keys(Routes).forEach((k) => {
       expect(Routes[k].template()).toEqual(expectedTemplate[k]);
     });
   });
-  test('Create', () => {
-    expect(Routes[RouteNames.HOME].create({})).toBe('/home');
+  test("Create", () => {
+    expect(Routes[RouteNames.HOME].create({})).toBe("/home");
 
-    expect(Routes[RouteNames.VIEW].create({})).toBe('/view');
+    expect(Routes[RouteNames.VIEW].create({})).toBe("/view");
 
-    expect(Routes[RouteNames.VIEW_DETAILS].create({ id: '3' })).toBe('/view/3');
+    expect(Routes[RouteNames.VIEW_DETAILS].create({ id: "3" })).toBe("/view/3");
 
-    expect(Routes[RouteNames.VIEW_MORE_DETAILS].create({ id: '3', otherId: '4' })).toBe(
-      '/view/3/more/4'
-    );
+    expect(
+      Routes[RouteNames.VIEW_MORE_DETAILS].create({ id: "3", otherId: "4" })
+    ).toBe("/view/3/more/4");
 
-    expect(Routes[RouteNames.ONLY_PARAM].create({ param: '1' })).toBe('/1');
+    expect(Routes[RouteNames.ONLY_PARAM].create({ param: "1" })).toBe("/1");
 
     expect(
       Routes[RouteNames.WITH_QUERY].create({
-        id: '1',
+        id: "1",
         query: {
-          dateCreated: '1/1/2018',
+          dateCreated: "1/1/2018",
         },
       })
-    ).toBe('/1?dateCreated=1/1/2018');
+    ).toBe("/1?dateCreated=1/1/2018");
 
     expect(
       Routes[RouteNames.EMPTY_QUERY].create({
-        id: '1',
+        id: "1",
       })
-    ).toBe('/1');
+    ).toBe("/1");
 
     expect(
       Routes[RouteNames.EMPTY_QUERY].create({
-        id: '1',
+        id: "1",
         query: {},
       })
-    ).toBe('/1');
+    ).toBe("/1");
 
     expect(
       Routes[RouteNames.MULTI_CALL_QUERY].create({
-        id: '1',
+        id: "1",
         query: {
-          dateCreated: '1/1/2018',
-          dateUpdated: '2/1/2018',
+          dateCreated: "1/1/2018",
+          dateUpdated: "2/1/2018",
         },
       })
-    ).toBe('/1?dateCreated=1/1/2018&dateUpdated=2/1/2018');
+    ).toBe("/1?dateCreated=1/1/2018&dateUpdated=2/1/2018");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
-        id: '1',
+        id: "1",
         query: {
-          dateCreated: '1/1/2018',
-          dateUpdated: '2/1/2018',
+          dateCreated: "1/1/2018",
+          dateUpdated: "2/1/2018",
         },
       })
-    ).toBe('/1?dateCreated=1/1/2018&dateUpdated=2/1/2018');
+    ).toBe("/1?dateCreated=1/1/2018&dateUpdated=2/1/2018");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
-        id: '1',
+        id: "1",
         query: {
           dateCreated: null,
           dateUpdated: undefined,
         },
       })
-    ).toBe('/1');
+    ).toBe("/1?dateCreated=");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
-        id: '1',
+        id: "1",
         query: {
-          dateCreated: '1/1/2018',
+          dateCreated: "1/1/2018",
         },
       })
-    ).toBe('/1?dateCreated=1/1/2018');
+    ).toBe("/1?dateCreated=1/1/2018");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
-        id: '1',
+        id: "1",
       })
-    ).toBe('/1');
+    ).toBe("/1");
   });
 
-  test('parse', () => {
-    expect(Routes[RouteNames.WITH_QUERY].parse('?dateCreated=1/1/2018')).toEqual({
-      dateCreated: '1/1/2018',
+  test("parse", () => {
+    expect(
+      Routes[RouteNames.WITH_QUERY].parse("?dateCreated=1/1/2018")
+    ).toEqual({
+      dateCreated: "1/1/2018",
     });
 
     expect(
       Routes[RouteNames.MULTI_CALL_QUERY].parse(
-        '?dateCreated=1/1/2018&dateUpdated=2/1/2018'
+        "?dateCreated=1/1/2018&dateUpdated=2/1/2018"
       )
     ).toEqual({
-      dateCreated: '1/1/2018',
-      dateUpdated: '2/1/2018',
+      dateCreated: "1/1/2018",
+      dateUpdated: "2/1/2018",
     });
 
-    expect(Routes[RouteNames.MULTI_CALL_QUERY].parse('?dateCreated=1/1/2018')).toEqual({
-      dateCreated: '1/1/2018',
+    expect(
+      Routes[RouteNames.MULTI_CALL_QUERY].parse("?dateCreated=1/1/2018")
+    ).toEqual({
+      dateCreated: "1/1/2018",
       dateUpdated: undefined,
     });
 
     // parse will return back any extra things found in the query string, but they will not be accessible
     // due to the restrictions we place on the return type
     expect(
-      Routes[RouteNames.MULTI_CALL_QUERY].parse('?garbage=1/1/2018&garbage2=2/1/2018')
+      Routes[RouteNames.MULTI_CALL_QUERY].parse(
+        "?garbage=1/1/2018&garbage2=2/1/2018"
+      )
     ).toEqual({
       dateCreated: undefined,
       dateUpdated: undefined,
-      garbage: '1/1/2018',
-      garbage2: '2/1/2018',
+      garbage: "1/1/2018",
+      garbage2: "2/1/2018",
     });
   });
 });

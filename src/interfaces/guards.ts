@@ -11,7 +11,7 @@
    limitations under the License.
  */
 
-import { PathParam } from './types';
+import { PathParam } from "./types";
 
 export function isParam(i: any): i is PathParam<any> {
   return i.param != null;

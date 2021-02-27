@@ -1,3 +1,5 @@
+import { useLocation, useParams } from "react-router-dom";
+
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,11 +13,15 @@
    limitations under the License.
  */
 
-import { PathPart, Route } from './interfaces/types';
-import { isParam } from './interfaces/guards';
-import { parse as _parse } from './parse';
+import { ParamsFromPathArray, PathPart, Route } from "./interfaces/types";
+import { isParam } from "./interfaces/guards";
+import { parse as _parse } from "./parse";
+import { stringify } from "qs";
 
-export type RouteCreator = <K extends Array<PathPart<any>>, Q extends Array<string> = []>(
+export type RouteCreator = <
+  K extends Array<PathPart<any>>,
+  Q extends Array<string> = []
+>(
   ...args: K
 ) => Route<K, Q>;
 
@@ -25,48 +31,65 @@ export const route: RouteCreator = (...pathParts: Array<PathPart<any>>) => {
   return _routeCreator(pathParts, emptyArr);
 };
 
-function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> = []>(
-  pathParts: Array<PathPart<any>>,
-  queryParams: Q
-): Route<T, Q> {
+function getPathBegin(pathParts: Array<PathPart<any>>) {
+  return pathParts[0] === "*" ? "" : "/";
+}
+
+function _routeCreator<
+  T extends Array<PathPart<any>>,
+  Q extends Array<string> = []
+>(pathParts: Array<PathPart<any>>, queryParams: Q): Route<T, Q> {
   return {
     template: () => {
       return (
-        '/' + pathParts.map(part => (isParam(part) ? `:${part.param}` : part)).join('/')
+        getPathBegin(pathParts) +
+        pathParts
+          .map((part) => (isParam(part) ? `:${part.param}` : part))
+          .join("/")
       );
     },
-    create: (params: any) => {
+    create: (params: Record<any, any> = {}) => {
       const baseUrl =
-        '/' +
+        getPathBegin(pathParts) +
         pathParts
-          .map(part => {
+          .map((part) => {
+            if (part === "*") {
+              return location.pathname;
+            }
             if (isParam(part)) {
               const { param } = part;
               return params[param];
             }
             return part;
           })
-          .join('/');
+          .join("/");
 
-      if (!params.query || Object.keys(params.query).length === 0) {
-        return baseUrl;
-      }
+      const queryString =
+        Object.keys(params.query || {}).length === 0
+          ? ""
+          : stringify(params.query, { encode: false });
 
-      const queryParams: Array<[string, string]> = Object.entries(params.query) || null;
-      const queryString = queryParams
-        .filter(([k, v]) => v != null)
-        .map(([k, v]) => {
-          return `${k}=${v}`;
-        })
-        .join('&');
-
-      return queryString === '' ? baseUrl : `${baseUrl}?${queryString}`;
+      return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
-    withQueryParams: <TQueryParams extends string[]>(...params: TQueryParams) => {
+    withQueryParams: <TQueryParams extends string[]>(
+      ...params: TQueryParams
+    ) => {
       return _routeCreator(pathParts, [...params, ...queryParams]);
     },
     parse: (queryString: string) => {
       return _parse(queryString);
+    },
+    /**
+     * A react hook to get query params
+     */
+    useQueryParams(): Partial<Record<Q[number], string>> {
+      return Object.fromEntries(
+        new URLSearchParams(useLocation().search).entries()
+      ) as any;
+    },
+
+    useParams() {
+      return useParams<Record<ParamsFromPathArray<T>[number], string>>();
     },
   };
 }
