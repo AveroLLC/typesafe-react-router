@@ -13,38 +13,32 @@ import { useLocation, useParams } from "react-router-dom";
    limitations under the License.
  */
 
-import { ParamsFromPathArray, PathPart, Route } from "./interfaces/types";
+import { GetParam, Route } from "./interfaces/types";
 import { isParam } from "./interfaces/guards";
-import { parse as _parse } from "./parse";
 import { stringify } from "qs";
 
-export const route = <
-  K extends Array<PathPart<any>>,
-  Q extends Array<string> = []
->(
-  ...pathParts: K
-): Route<K, Q> => {
-  // ts was yelling about this array as a never[]?
-  const emptyArr: string[] = [];
-  return _routeCreator(pathParts, emptyArr);
-};
+const __DEV__ = process.env.NODE_ENV !== "production";
 
-function getPathBegin(pathParts: Array<PathPart<any>>) {
+function getPathBegin(pathParts: string[]) {
   return pathParts[0] === "*" ? "" : "/";
 }
 
-function _routeCreator<
-  T extends Array<PathPart<any>>,
-  Q extends Array<string> = []
->(pathParts: Array<PathPart<any>>, queryParams: Q): Route<T, Q> {
+export function route<T extends string, Q extends string>(
+  pathParts: T[],
+  queryParams: Q[] = []
+): Route<T, Q> {
+  if (__DEV__) {
+    const error = pathParts.find((p) => p.includes("/"));
+    if (error) {
+      throw new Error(
+        `react-route-type: Don't use '/' in route '${error}', use it like \`route(['home',':id'])\``
+      );
+    }
+  }
+
   return {
     template: () => {
-      return (
-        getPathBegin(pathParts) +
-        pathParts
-          .map((part) => (isParam(part) ? `:${part.param}` : part))
-          .join("/")
-      );
+      return getPathBegin(pathParts) + pathParts.join("/");
     },
     create: (params: Record<any, any> = {}) => {
       const baseUrl =
@@ -55,8 +49,7 @@ function _routeCreator<
               return location.pathname;
             }
             if (isParam(part)) {
-              const { param } = part;
-              return params[param];
+              return params[(part as string).slice(1)];
             }
             return part;
           })
@@ -69,13 +62,9 @@ function _routeCreator<
 
       return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
-    withQueryParams: <TQueryParams extends string[]>(
-      ...params: TQueryParams
-    ) => {
-      return _routeCreator(pathParts, [...params, ...queryParams]);
-    },
-    parse: (queryString: string) => {
-      return _parse(queryString);
+
+    route: (_path, params = []) => {
+      return route([...pathParts, ..._path], [...params, ...queryParams]);
     },
     /**
      * A react hook to get query params
@@ -87,7 +76,7 @@ function _routeCreator<
     },
 
     useParams() {
-      return useParams<Record<ParamsFromPathArray<T>[number], string>>();
+      return useParams<Record<GetParam<T>, string>>();
     },
   };
 }

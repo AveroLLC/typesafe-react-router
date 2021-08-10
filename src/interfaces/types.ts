@@ -1,6 +1,3 @@
-import { route } from "../route";
-import { param } from "../param";
-
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,58 +11,36 @@ import { param } from "../param";
    limitations under the License.
  */
 
-export interface Route<
-  Parts extends Array<PathPart<any>>,
-  QueryParams extends string[] = []
-> {
+export interface Route<Parts extends string, QueryParams extends string> {
   template(): string;
 
   create(
-    params?: Record<ParamsFromPathArray<Parts>[number], string> &
-      Partial<{ query: Partial<Record<QueryParams[number], string>> }>
+    params?: Record<GetParam<Parts>, string> &
+      Partial<{ query: Partial<Record<QueryParams, string | null>> }>
   ): string;
 
-  withQueryParams: <T extends string[]>(
-    ...params: T
-  ) => Route<Parts, [QueryParams[number] | T[number]]>;
+  route: <Parts1 extends string, QueryParams1 extends string>(
+    paths: Parts1[],
+    params?: QueryParams1[]
+  ) => Route<
+    Parts1 | Parts,
+    QueryParams | QueryParams1
+    // MergeQuery<QueryParams | QueryParams1>[]
+  >;
 
-  parse(queryString: string): Partial<Record<QueryParams[number], string>>;
+  useQueryParams(): Partial<Record<QueryParams, string>>;
 
-  useQueryParams(): Partial<Record<QueryParams[number], string>>;
-
-  useParams(): Record<ParamsFromPathArray<Parts>[number], string>;
+  useParams(): Record<GetParam<Parts>, string>;
 }
 
 /**
  * @ignore
  */
-export interface PathParam<T extends string> {
-  param: T;
-}
+export type PathParam<T extends string> = T extends `:${infer A}` ? A : never;
 
 /**
  * @ignore
  */
 export type PathPart<T extends string> = string | PathParam<T>;
 
-/**
- * @ignore
- */
-export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
-  [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never;
-};
-
-/**
- * Given the parameters of a route I want an object of { paramName: string }
- * ```js
- * const Route = route(['logbook', param('logbookId'), param('otherId')]);
- * RouteParams<Route> = { logbookId: string, otherId: string }
- * ```
- * @ignore
- */
-export type RouteParams<T extends Route<any, any>> = T extends Route<
-  infer X,
-  any
->
-  ? Record<ParamsFromPathArray<X>[number], string>
-  : never;
+export type GetParam<T extends string> = T extends `:${infer A}` ? A : never;

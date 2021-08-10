@@ -12,7 +12,6 @@
  */
 
 import { route } from "./route";
-import { param } from "./param";
 
 enum RouteNames {
   HOME = "HOME",
@@ -27,24 +26,17 @@ enum RouteNames {
 }
 
 const Routes = {
-  [RouteNames.HOME]: route("home"),
-  [RouteNames.VIEW]: route("view"),
-  [RouteNames.VIEW_DETAILS]: route("view", param("id")),
-  [RouteNames.VIEW_MORE_DETAILS]: route(
-    "view",
-    param("id"),
-    "more",
-    param("otherId")
-  ),
-  [RouteNames.ONLY_PARAM]: route(param("param")),
-  [RouteNames.WITH_QUERY]: route(param("id")).withQueryParams("dateCreated"),
-  [RouteNames.EMPTY_QUERY]: route(param("id")).withQueryParams(),
-  [RouteNames.MULTI_CALL_QUERY]: route(param("id"))
-    .withQueryParams("dateCreated")
-    .withQueryParams("dateUpdated"),
-  [RouteNames.MULTI_QUERY]: route(param("id")).withQueryParams(
-    "dateCreated",
-    "dateUpdated"
+  [RouteNames.HOME]: route(["home"]),
+  [RouteNames.VIEW]: route(["view"]),
+  [RouteNames.VIEW_DETAILS]: route(["view", ":id"]),
+  [RouteNames.VIEW_MORE_DETAILS]: route(["view", ":id", "more", ":otherId"]),
+  [RouteNames.ONLY_PARAM]: route([":param"]),
+  [RouteNames.WITH_QUERY]: route([":id"], ["dateCreated"]),
+  [RouteNames.EMPTY_QUERY]: route([":id"], []),
+  [RouteNames.MULTI_CALL_QUERY]: route([":id"], ["dateCreated", "dateUpdated"]),
+  [RouteNames.MULTI_QUERY]: route(["home"], ["dateCreated"]).route(
+    [":id"],
+    ["dateUpdated"]
   ),
 };
 
@@ -57,13 +49,15 @@ const expectedTemplate = {
   [RouteNames.WITH_QUERY]: "/:id",
   [RouteNames.EMPTY_QUERY]: "/:id",
   [RouteNames.MULTI_CALL_QUERY]: "/:id",
-  [RouteNames.MULTI_QUERY]: "/:id",
+  [RouteNames.MULTI_QUERY]: "/home/:id",
 };
 
 describe("Route", () => {
   test("Template", () => {
     Object.keys(Routes).forEach((k) => {
-      expect(Routes[k].template()).toEqual(expectedTemplate[k]);
+      expect(Routes[k as keyof typeof Routes].template()).toEqual(
+        expectedTemplate[k as keyof typeof expectedTemplate]
+      );
     });
   });
   test("Create", () => {
@@ -119,7 +113,7 @@ describe("Route", () => {
           dateUpdated: "2/1/2018",
         },
       })
-    ).toBe("/1?dateCreated=1/1/2018&dateUpdated=2/1/2018");
+    ).toBe("/home/1?dateCreated=1/1/2018&dateUpdated=2/1/2018");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
@@ -129,7 +123,7 @@ describe("Route", () => {
           dateUpdated: undefined,
         },
       })
-    ).toBe("/1?dateCreated=");
+    ).toBe("/home/1?dateCreated=");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
@@ -138,49 +132,29 @@ describe("Route", () => {
           dateCreated: "1/1/2018",
         },
       })
-    ).toBe("/1?dateCreated=1/1/2018");
+    ).toBe("/home/1?dateCreated=1/1/2018");
 
     expect(
       Routes[RouteNames.MULTI_QUERY].create({
         id: "1",
       })
-    ).toBe("/1");
-  });
-
-  test("parse", () => {
-    expect(
-      Routes[RouteNames.WITH_QUERY].parse("?dateCreated=1/1/2018")
-    ).toEqual({
-      dateCreated: "1/1/2018",
-    });
-
-    expect(
-      Routes[RouteNames.MULTI_CALL_QUERY].parse(
-        "?dateCreated=1/1/2018&dateUpdated=2/1/2018"
-      )
-    ).toEqual({
-      dateCreated: "1/1/2018",
-      dateUpdated: "2/1/2018",
-    });
-
-    expect(
-      Routes[RouteNames.MULTI_CALL_QUERY].parse("?dateCreated=1/1/2018")
-    ).toEqual({
-      dateCreated: "1/1/2018",
-      dateUpdated: undefined,
-    });
-
-    // parse will return back any extra things found in the query string, but they will not be accessible
-    // due to the restrictions we place on the return type
-    expect(
-      Routes[RouteNames.MULTI_CALL_QUERY].parse(
-        "?garbage=1/1/2018&garbage2=2/1/2018"
-      )
-    ).toEqual({
-      dateCreated: undefined,
-      dateUpdated: undefined,
-      garbage: "1/1/2018",
-      garbage2: "2/1/2018",
-    });
+    ).toBe("/home/1");
   });
 });
+
+const tsRoute = route(["home", ":id"], ["search"]).route(
+  ["list", ":name"],
+  ["type"]
+);
+
+function Comp() {
+  const { id, name } = tsRoute.useParams();
+
+  //@ts-expect-error
+  const { invalidParam } = tsRoute.useParams();
+
+  const { search, type } = tsRoute.useQueryParams();
+
+  //@ts-expect-error
+  const { invalidQuery } = tsRoute.useQueryParams();
+}

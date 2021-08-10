@@ -4,111 +4,107 @@
 
 ## Type parameters
 
-Name | Type | Default |
-:------ | :------ | :------ |
-`Parts` | *PathPart*<any\>[] | - |
-`QueryParams` | *string*[] | [] |
+| Name | Type |
+| :------ | :------ |
+| `Parts` | extends `string` |
+| `QueryParams` | extends `string` |
 
 ## Table of contents
 
-### Properties
-
-- [withQueryParams](route.md#withqueryparams)
-
 ### Methods
 
-- [create](route.md#create)
-- [parse](route.md#parse)
-- [template](route.md#template)
-- [useParams](route.md#useparams)
-- [useQueryParams](route.md#usequeryparams)
-
-## Properties
-
-### withQueryParams
-
-• **withQueryParams**: <T\>(...`params`: T) => [*Route*](route.md)<Parts, [QueryParams[*number*] \| T[*number*]]\>
-
-#### Type declaration:
-
-▸ <T\>(...`params`: T): [*Route*](route.md)<Parts, [QueryParams[*number*] \| T[*number*]]\>
-
-#### Type parameters:
-
-Name | Type |
-:------ | :------ |
-`T` | *string*[] |
-
-#### Parameters:
-
-Name | Type |
-:------ | :------ |
-`...params` | T |
-
-**Returns:** [*Route*](route.md)<Parts, [QueryParams[*number*] \| T[*number*]]\>
-
-Defined in: [interfaces/types.ts:28](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L28)
-
-Defined in: [interfaces/types.ts:28](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L28)
+- [create](Route.md#create)
+- [route](Route.md#route)
+- [template](Route.md#template)
+- [useParams](Route.md#useparams)
+- [useQueryParams](Route.md#usequeryparams)
 
 ## Methods
 
 ### create
 
-▸ **create**(`params?`: *Record*<*ParamsFromPathArray*<Parts\>[*number*], string\> & *Partial*<{ `query`: *Partial*<Record<QueryParams[*number*], string\>\>  }\>): *string*
+▸ **create**(`params?`): `string`
 
-#### Parameters:
+#### Parameters
 
-Name | Type |
-:------ | :------ |
-`params?` | *Record*<*ParamsFromPathArray*<Parts\>[*number*], string\> & *Partial*<{ `query`: *Partial*<Record<QueryParams[*number*], string\>\>  }\> |
+| Name | Type |
+| :------ | :------ |
+| `params?` | `Record`<[`GetParam`](../modules.md#getparam)<`Parts`\>, `string`\> & `Partial`<`Object`\> |
 
-**Returns:** *string*
+#### Returns
 
-Defined in: [interfaces/types.ts:23](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L23)
+`string`
+
+#### Defined in
+
+[interfaces/types.ts:17](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L17)
 
 ___
 
-### parse
+### route
 
-▸ **parse**(`queryString`: *string*): *Partial*<Record<QueryParams[*number*], string\>\>
+▸ **route**<`Parts1`, `QueryParams1`\>(`paths`, `params?`): [`Route`](Route.md)<`Parts` \| `Parts1`, `QueryParams` \| `QueryParams1`\>
 
-#### Parameters:
+#### Type parameters
 
-Name | Type |
-:------ | :------ |
-`queryString` | *string* |
+| Name | Type |
+| :------ | :------ |
+| `Parts1` | extends `string` |
+| `QueryParams1` | extends `string` |
 
-**Returns:** *Partial*<Record<QueryParams[*number*], string\>\>
+#### Parameters
 
-Defined in: [interfaces/types.ts:32](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L32)
+| Name | Type |
+| :------ | :------ |
+| `paths` | `Parts1`[] |
+| `params?` | `QueryParams1`[] |
+
+#### Returns
+
+[`Route`](Route.md)<`Parts` \| `Parts1`, `QueryParams` \| `QueryParams1`\>
+
+#### Defined in
+
+[interfaces/types.ts:22](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L22)
 
 ___
 
 ### template
 
-▸ **template**(): *string*
+▸ **template**(): `string`
 
-**Returns:** *string*
+#### Returns
 
-Defined in: [interfaces/types.ts:21](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L21)
+`string`
+
+#### Defined in
+
+[interfaces/types.ts:15](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L15)
 
 ___
 
 ### useParams
 
-▸ **useParams**(): *Record*<*ParamsFromPathArray*<Parts\>[*number*], string\>
+▸ **useParams**(): `Record`<[`GetParam`](../modules.md#getparam)<`Parts`\>, `string`\>
 
-**Returns:** *Record*<*ParamsFromPathArray*<Parts\>[*number*], string\>
+#### Returns
 
-Defined in: [interfaces/types.ts:36](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L36)
+`Record`<[`GetParam`](../modules.md#getparam)<`Parts`\>, `string`\>
+
+#### Defined in
+
+[interfaces/types.ts:33](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L33)
 
 ___
 
 ### useQueryParams
 
-▸ **useQueryParams**(): *Partial*<Record<QueryParams[*number*], string\>\>
+▸ **useQueryParams**(): `Partial`<`Record`<`QueryParams`, `string`\>\>
 
-**Returns:** *Partial*<Record<QueryParams[*number*], string\>\>
+#### Returns
 
-Defined in: [interfaces/types.ts:34](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/interfaces/types.ts#L34)
+`Partial`<`Record`<`QueryParams`, `string`\>\>
+
+#### Defined in
+
+[interfaces/types.ts:31](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L31)

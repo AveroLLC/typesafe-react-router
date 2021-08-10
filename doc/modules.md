@@ -6,31 +6,56 @@
 
 ### Interfaces
 
-- [Route](interfaces/route.md)
+- [Route](interfaces/Route.md)
+
+### Type aliases
+
+- [GetParam](modules.md#getparam)
 
 ### Functions
 
 - [route](modules.md#route)
 
+## Type aliases
+
+### GetParam
+
+Ƭ **GetParam**<`T`\>: `T` extends \`:${infer A}\` ? `A` : `never`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `string` |
+
+#### Defined in
+
+[interfaces/types.ts:46](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/interfaces/types.ts#L46)
+
 ## Functions
 
 ### route
 
-▸ `Const`**route**<K, Q\>(...`pathParts`: K): [*Route*](interfaces/route.md)<K, Q\>
+▸ **route**<`T`, `Q`\>(`pathParts`, `queryParams?`): [`Route`](interfaces/Route.md)<`T`, `Q`\>
 
-#### Type parameters:
+#### Type parameters
 
-Name | Type | Default |
-:------ | :------ | :------ |
-`K` | *PathPart*<any\>[] | - |
-`Q` | *string*[] | [] |
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `string` |
+| `Q` | extends `string` |
 
-#### Parameters:
+#### Parameters
 
-Name | Type |
-:------ | :------ |
-`...pathParts` | K |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `pathParts` | `T`[] | `undefined` |
+| `queryParams` | `Q`[] | `[]` |
 
-**Returns:** [*Route*](interfaces/route.md)<K, Q\>
+#### Returns
 
-Defined in: [route.ts:21](https://github.com/hosseinmd/react-route-type/blob/71fb9eb/src/route.ts#L21)
+[`Route`](interfaces/Route.md)<`T`, `Q`\>
+
+#### Defined in
+
+[route.ts:26](https://github.com/hosseinmd/react-route-type/blob/6c02ce4/src/route.ts#L26)

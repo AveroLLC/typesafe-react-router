@@ -16,24 +16,19 @@ Note: This gif is using the 1.0 array-style API, rather than spread arguments us
 ## Usage
 
 ```tsx
-import { route, param } from 'react-route-type';
+import { route } from 'react-route-type';
 
-export enum RouteNames {
-  HOME = "HOME"
-  VIEW_ALL = "VIEW_ALL"
-  VIEW_DETAILS = 'VIEW_DETAILS'
-}
 
 export const Routes = {
-  [RouteNames.HOME]: route('home');
-  [RouteNames.VIEW_ALL]: route('view')
-  [RouteNames.VIEW_DETAILS]: route('view', param('id'))
+  home: route(['home']);
+  view: route(['view'],["search"])
+  details: route(['details', ':id'])
 }
 
-const viewDetailsTemplate = Routes[RouteNames.VIEW_DETAILS].template() // -> /view/:id
-const viewDetailsCreate = Routes[RouteNames.VIEW_DETAILS].create({ id: '2' }) // -> /view/2
+const viewDetailsTemplate = Routes.details.template() // -> /details/:id
+const viewDetailsCreate = Routes.details.create({ id: '2' }) // -> /details/2
 
-const viewDetailsCreateERROR = Routes[RouteNames.VIEW_DETAILS].create({}) // ERROR: property 'id' is missing in type {}
+const viewDetailsCreateERROR = Routes.details.create({}) // ERROR: property 'id' is missing in type {}
 
 // Usage with React Router
 import { Route, Switch } from 'react-router-dom';
@@ -41,9 +36,9 @@ import { Home, Summary, Details } from './components'
 export class App extends React.PureComponent {
   render() {
     <Switch>
-      <Route path={Routes[RouteNames.HOME].template()} component={Home} />
-      <Route path={Routes[RouteNames.VIEW].template()} component={Summary} />
-      <Route path={Routes[RouteNames.VIEW_DETAILS].template()} component={Details} />
+      <Route path={Routes.home.template()} component={Home} />
+      <Route path={Routes.view.template()} component={Summary} />
+      <Route path={Routes.details.template()} component={Details} />
     </Switch>
   }
 }
@@ -54,10 +49,21 @@ export class Home extends React.PureComponent {
   render() {
     <div>
       <h1>Welcome Home!</h1>
-      <Link to={Routes[RouteNames.VIEW_DETAILS].create({ id: '3' })} />
-      {/* ERROR: property 'id' is missing in type {} */}
-      <Link to={Routes[RouteNames.VIEW_DETAILS].create({})} />
+      <Link to={Routes.details.create({ id: '3' })} />
+      <Link to={Routes.view.create({})} />
     </div>
   }
 }
+```
+
+## Hooks
+
+```js
+export const Details = () => {
+  const { id } = Routes.details.useParams();
+};
+
+export const View = () => {
+  const { search } = Routes.view.useQueryParam();
+};
 ```

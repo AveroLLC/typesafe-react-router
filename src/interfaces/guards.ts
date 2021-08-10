@@ -13,6 +13,6 @@
 
 import { PathParam, PathPart } from "./types";
 
-export function isParam(i: PathPart<any>): i is PathParam<any> {
-  return typeof i !== "string" && i.param;
+export function isParam<T extends string>(i: PathPart<T>): i is PathParam<T> {
+  return typeof i === "string" && i.startsWith(":");
 }
