@@ -11,22 +11,28 @@
    limitations under the License.
  */
 
+type CreateFun<
+  Parts extends string,
+  QueryParams extends string
+> = Parts extends `:${infer A}`
+  ? (
+      params: Record<GetParam<Parts>, string> & {
+        query?: Partial<Record<QueryParams, string | null>>;
+      }
+    ) => string
+  : (params?: {
+      query?: Partial<Record<QueryParams, string | null>>;
+    }) => string;
+
 export interface Route<Parts extends string, QueryParams extends string> {
   template(): string;
 
-  create(
-    params?: Record<GetParam<Parts>, string> &
-      Partial<{ query: Partial<Record<QueryParams, string | null>> }>
-  ): string;
+  create: CreateFun<Parts, QueryParams>;
 
-  route: <Parts1 extends string, QueryParams1 extends string>(
-    paths: Parts1[],
-    params?: QueryParams1[]
-  ) => Route<
-    Parts1 | Parts,
-    QueryParams | QueryParams1
-    // MergeQuery<QueryParams | QueryParams1>[]
-  >;
+  route: <Parts1 extends string, QueryParams1 extends string>(arg: {
+    path: Parts1[];
+    query?: QueryParams1[];
+  }) => Route<Parts1 | Parts, QueryParams | QueryParams1>;
 
   useQueryParams(): Partial<Record<QueryParams, string>>;
 

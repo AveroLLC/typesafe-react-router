@@ -26,18 +26,23 @@ enum RouteNames {
 }
 
 const Routes = {
-  [RouteNames.HOME]: route(["home"]),
-  [RouteNames.VIEW]: route(["view"]),
-  [RouteNames.VIEW_DETAILS]: route(["view", ":id"]),
-  [RouteNames.VIEW_MORE_DETAILS]: route(["view", ":id", "more", ":otherId"]),
-  [RouteNames.ONLY_PARAM]: route([":param"]),
-  [RouteNames.WITH_QUERY]: route([":id"], ["dateCreated"]),
-  [RouteNames.EMPTY_QUERY]: route([":id"], []),
-  [RouteNames.MULTI_CALL_QUERY]: route([":id"], ["dateCreated", "dateUpdated"]),
-  [RouteNames.MULTI_QUERY]: route(["home"], ["dateCreated"]).route(
-    [":id"],
-    ["dateUpdated"]
-  ),
+  [RouteNames.HOME]: route({ path: ["home"] }),
+  [RouteNames.VIEW]: route({ path: ["view"] }),
+  [RouteNames.VIEW_DETAILS]: route({ path: ["view", ":id"] }),
+  [RouteNames.VIEW_MORE_DETAILS]: route({
+    path: ["view", ":id", "more", ":otherId"],
+  }),
+  [RouteNames.ONLY_PARAM]: route({ path: [":param"] }),
+  [RouteNames.WITH_QUERY]: route({ path: [":id"], query: ["dateCreated"] }),
+  [RouteNames.EMPTY_QUERY]: route({ path: [":id"] }),
+  [RouteNames.MULTI_CALL_QUERY]: route({
+    path: [":id"],
+    query: ["dateCreated", "dateUpdated"],
+  }),
+  [RouteNames.MULTI_QUERY]: route({
+    path: ["home"],
+    query: ["dateCreated"],
+  }).route({ path: [":id"], query: ["dateUpdated"] }),
 };
 
 const expectedTemplate = {
@@ -61,9 +66,9 @@ describe("Route", () => {
     });
   });
   test("Create", () => {
-    expect(Routes[RouteNames.HOME].create({})).toBe("/home");
+    expect(Routes[RouteNames.HOME].create()).toBe("/home");
 
-    expect(Routes[RouteNames.VIEW].create({})).toBe("/view");
+    expect(Routes[RouteNames.VIEW].create()).toBe("/view");
 
     expect(Routes[RouteNames.VIEW_DETAILS].create({ id: "3" })).toBe("/view/3");
 
@@ -142,10 +147,10 @@ describe("Route", () => {
   });
 });
 
-const tsRoute = route(["home", ":id"], ["search"]).route(
-  ["list", ":name"],
-  ["type"]
-);
+const tsRoute = route({ path: ["home", ":id"], query: ["search"] }).route({
+  path: ["list", ":name"],
+  query: ["type"],
+});
 
 function Comp() {
   const { id, name } = tsRoute.useParams();

@@ -19,16 +19,19 @@ import { stringify } from "qs";
 
 const __DEV__ = process.env.NODE_ENV !== "production";
 
-function getPathBegin(pathParts: string[]) {
-  return pathParts[0] === "*" ? "" : "/";
+function getPathBegin(path: string[]) {
+  return path[0] === "*" ? "" : "/";
 }
 
-export function route<T extends string, Q extends string>(
-  pathParts: T[],
-  queryParams: Q[] = []
-): Route<T, Q> {
+export function route<T extends string, Q extends string>({
+  path,
+  query = [],
+}: {
+  path: T[];
+  query?: Q[];
+}): Route<T, Q> {
   if (__DEV__) {
-    const error = pathParts.find((p) => p.includes("/"));
+    const error = path.find((p) => p.includes("/"));
     if (error) {
       throw new Error(
         `react-route-type: Don't use '/' in route '${error}', use it like \`route(['home',':id'])\``
@@ -38,12 +41,12 @@ export function route<T extends string, Q extends string>(
 
   return {
     template: () => {
-      return getPathBegin(pathParts) + pathParts.join("/");
+      return getPathBegin(path) + path.join("/");
     },
     create: (params: Record<any, any> = {}) => {
       const baseUrl =
-        getPathBegin(pathParts) +
-        pathParts
+        getPathBegin(path) +
+        path
           .map((part) => {
             if (part === "*") {
               return location.pathname;
@@ -63,8 +66,11 @@ export function route<T extends string, Q extends string>(
       return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
 
-    route: (_path, params = []) => {
-      return route([...pathParts, ..._path], [...params, ...queryParams]);
+    route: ({ path: _path, query: _query = [] }) => {
+      return route({
+        path: [...path, ..._path],
+        query: [...query, ..._query],
+      });
     },
     /**
      * A react hook to get query params
