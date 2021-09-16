@@ -11,30 +11,20 @@
    limitations under the License.
  */
 
-type CreateFun<
+export interface Route<
   Parts extends string,
-  QueryParams extends string
-> = Parts extends `:${infer A}`
-  ? (
-      params: Record<GetParam<Parts>, string> & {
-        query?: Partial<Record<QueryParams, string | null>>;
-      }
-    ) => string
-  : (params?: {
-      query?: Partial<Record<QueryParams, string | null>>;
-    }) => string;
-
-export interface Route<Parts extends string, QueryParams extends string> {
+  QueryParams extends QueryParamDefault
+> {
   template(): string;
 
   create: CreateFun<Parts, QueryParams>;
 
-  route: <Parts1 extends string, QueryParams1 extends string>(arg: {
+  route: <Parts1 extends string, QueryParams1 extends QueryParamDefault>(arg: {
     path: Parts1[];
-    query?: QueryParams1[];
-  }) => Route<Parts1 | Parts, QueryParams | QueryParams1>;
+    query?: QueryParams1;
+  }) => Route<Parts1 | Parts, QueryParams & QueryParams1>;
 
-  useQueryParams(): Partial<Record<QueryParams, string>>;
+  useQueryParams(): Partial<QueryParams>;
 
   useParams(): Record<GetParam<Parts>, string>;
 }
@@ -50,3 +40,28 @@ export type PathParam<T extends string> = T extends `:${infer A}` ? A : never;
 export type PathPart<T extends string> = string | PathParam<T>;
 
 export type GetParam<T extends string> = T extends `:${infer A}` ? A : never;
+
+/**
+ * @ignore
+ */
+export type QueryParamDefault = Record<
+  string,
+  | string
+  | Array<string | Array<any> | Record<string, any> | null>
+  | Record<string, any>
+  | null
+>;
+
+/**
+ * @ignore
+ */
+export type CreateFun<
+  Parts extends string,
+  QueryParams extends QueryParamDefault
+> = Parts extends `:${infer A}`
+  ? (
+      params: Record<GetParam<Parts>, string> & {
+        query?: Partial<QueryParams>;
+      }
+    ) => string
+  : (params?: { query?: Partial<QueryParams> }) => string;

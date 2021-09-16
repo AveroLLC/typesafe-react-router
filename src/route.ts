@@ -13,9 +13,10 @@ import { useLocation, useParams } from "react-router-dom";
    limitations under the License.
  */
 
-import { GetParam, Route } from "./interfaces/types";
+import { GetParam, QueryParamDefault, Route } from "./interfaces/types";
 import { isParam } from "./interfaces/guards";
 import { stringify } from "qs";
+import { useMemo } from "react";
 
 const __DEV__ = process.env.NODE_ENV !== "production";
 
@@ -23,12 +24,12 @@ function getPathBegin(path: string[]) {
   return path[0] === "*" ? "" : "/";
 }
 
-export function route<T extends string, Q extends string>({
+export function route<T extends string, Q extends QueryParamDefault>({
   path,
-  query = [],
+  query,
 }: {
   path: T[];
-  query?: Q[];
+  query?: Q;
 }): Route<T, Q> {
   if (__DEV__) {
     const error = path.find((p) => p.includes("/"));
@@ -66,19 +67,26 @@ export function route<T extends string, Q extends string>({
       return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
 
-    route: ({ path: _path, query: _query = [] }) => {
+    route({ path: _path, query: _query }) {
       return route({
         path: [...path, ..._path],
-        query: [...query, ..._query],
+        query: { ...query, ..._query } as any,
       });
     },
     /**
      * A react hook to get query params
      */
-    useQueryParams(): Partial<Record<Q[number], string>> {
-      return Object.fromEntries(
-        new URLSearchParams(useLocation().search).entries()
-      ) as any;
+    useQueryParams() {
+      const { search } = useLocation();
+
+      return useMemo(
+        () =>
+          ({
+            ...query,
+            ...Object.fromEntries(new URLSearchParams(search).entries()),
+          } as any),
+        [search]
+      );
     },
 
     useParams() {

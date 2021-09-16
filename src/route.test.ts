@@ -33,16 +33,19 @@ const Routes = {
     path: ["view", ":id", "more", ":otherId"],
   }),
   [RouteNames.ONLY_PARAM]: route({ path: [":param"] }),
-  [RouteNames.WITH_QUERY]: route({ path: [":id"], query: ["dateCreated"] }),
+  [RouteNames.WITH_QUERY]: route({ path: [":id"], query: { dateCreated: "" } }),
   [RouteNames.EMPTY_QUERY]: route({ path: [":id"] }),
   [RouteNames.MULTI_CALL_QUERY]: route({
     path: [":id"],
-    query: ["dateCreated", "dateUpdated"],
+    query: { dateCreated: "", dateUpdated: "" },
   }),
   [RouteNames.MULTI_QUERY]: route({
     path: ["home"],
-    query: ["dateCreated"],
-  }).route({ path: [":id"], query: ["dateUpdated"] }),
+    query: { dateCreated: "" as string | null },
+  }).route({
+    path: [":id"],
+    query: { dateUpdated: "" },
+  }),
 };
 
 const expectedTemplate = {
@@ -147,9 +150,9 @@ describe("Route", () => {
   });
 });
 
-const tsRoute = route({ path: ["home", ":id"], query: ["search"] }).route({
+const tsRoute = route({ path: ["home", ":id"], query: { search: "" } }).route({
   path: ["list", ":name"],
-  query: ["type"],
+  query: { type: "" },
 });
 
 function Comp() {
