@@ -19,6 +19,7 @@ export const Routes = {
   home: route({ path: ["home"] }),
   view: route({ path: ["view"] }),
   details: route({ path: ["view", ":id"] }),
+  users: route({ path: ["users"], query: { search: "" } }),
 };
 
 const viewDetailsTemplate = Routes.details.template(); // -> /view/:id
