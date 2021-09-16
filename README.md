@@ -83,3 +83,18 @@ export const View = () => {
   const { search } = Routes.view.useQueryParam();
 };
 ```
+
+With Default value
+
+```js
+const users = route({
+  path: ["users"],
+  query: { withDefault: "default" },
+});
+
+export const Users = () => {
+  const { withDefault } = Routes.view.useQueryParam();
+
+  /// withDefault === "default" is true
+};
+```
