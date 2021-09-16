@@ -10,9 +10,6 @@ yarn
 
 `yarn add react-route-type`
 
-![vscode](https://i.imgur.com/WQHOWKx.gif "VSCode")
-Note: This gif is using the 1.0 array-style API, rather than spread arguments used in 2.0.
-
 ## Usage
 
 ```tsx
