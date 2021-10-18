@@ -26,24 +26,24 @@ enum RouteNames {
 }
 
 const Routes = {
-  [RouteNames.HOME]: route({ path: ["home"] }),
-  [RouteNames.VIEW]: route({ path: ["view"] }),
+  [RouteNames.HOME]: route("home"),
+  [RouteNames.VIEW]: route("view"),
   [RouteNames.VIEW_DETAILS]: route({ path: ["view", ":id"] }),
   [RouteNames.VIEW_MORE_DETAILS]: route({
     path: ["view", ":id", "more", ":otherId"],
   }),
-  [RouteNames.ONLY_PARAM]: route({ path: [":param"] }),
-  [RouteNames.WITH_QUERY]: route({ path: [":id"], query: { dateCreated: "" } }),
+  [RouteNames.ONLY_PARAM]: route({ path: ":param" }),
+  [RouteNames.WITH_QUERY]: route({ path: ":id", query: { dateCreated: "" } }),
   [RouteNames.EMPTY_QUERY]: route({ path: [":id"] }),
   [RouteNames.MULTI_CALL_QUERY]: route({
     path: [":id"],
     query: { dateCreated: "", dateUpdated: "" },
   }),
   [RouteNames.MULTI_QUERY]: route({
-    path: ["home"],
+    path: "home",
     query: { dateCreated: "" as string | null },
   }).route({
-    path: [":id"],
+    path: ":id",
     query: { dateUpdated: "" },
   }),
 };
@@ -68,6 +68,7 @@ describe("Route", () => {
       );
     });
   });
+
   test("Create", () => {
     expect(Routes[RouteNames.HOME].create()).toBe("/home");
 

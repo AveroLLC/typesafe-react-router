@@ -24,15 +24,23 @@ function getPathBegin(path: string[]) {
   return path[0] === "*" ? "" : "/";
 }
 
-export function route<T extends string, Q extends QueryParamDefault>({
-  path,
-  query,
-}: {
-  path: T[];
-  query?: Q;
-}): Route<T, Q> {
+export function route<T extends string, Q extends QueryParamDefault>(
+  param:
+    | {
+        path: T[] | T;
+        query?: Q;
+      }
+    | T[]
+    | T
+): Route<T, Q> {
+  const { path, query } =
+    typeof param === "string" || Array.isArray(param)
+      ? { path: param, query: undefined }
+      : param;
+
+  const paths = Array.isArray(path) ? path : [path];
   if (__DEV__) {
-    const error = path.find((p) => p.includes("/"));
+    const error = paths.find((p) => p.includes("/"));
     if (error) {
       throw new Error(
         `react-route-type: Don't use '/' in route '${error}', use it like \`route(['home',':id'])\``
@@ -42,12 +50,12 @@ export function route<T extends string, Q extends QueryParamDefault>({
 
   return {
     template: () => {
-      return getPathBegin(path) + path.join("/");
+      return getPathBegin(paths) + paths.join("/");
     },
     create: (params: Record<any, any> = {}) => {
       const baseUrl =
-        getPathBegin(path) +
-        path
+        getPathBegin(paths) +
+        paths
           .map((part) => {
             if (part === "*") {
               return location.pathname;
@@ -67,9 +75,16 @@ export function route<T extends string, Q extends QueryParamDefault>({
       return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
 
-    route({ path: _path, query: _query }) {
+    route(_param) {
+      const { path: _path, query: _query } =
+        typeof _param === "string" || Array.isArray(_param)
+          ? { path: _param, query: undefined }
+          : _param;
+
+      const _paths = Array.isArray(_path) ? _path : [_path];
+
       return route({
-        path: [...path, ..._path],
+        path: [...paths, ..._paths],
         query: { ...query, ..._query } as any,
       });
     },
