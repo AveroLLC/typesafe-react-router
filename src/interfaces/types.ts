@@ -26,6 +26,7 @@ export interface Route<
           query?: QueryParams1;
         }
       | Parts1
+      | Parts1[]
   ) => Route<Parts1 | Parts, QueryParams & QueryParams1>;
 
   useQueryParams(): Partial<QueryParams>;
