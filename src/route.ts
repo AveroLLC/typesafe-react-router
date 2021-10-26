@@ -68,5 +68,8 @@ function _routeCreator<T extends Array<PathPart<any>>, Q extends Array<string> =
     parse: (queryString: string) => {
       return _parse(queryString);
     },
+    nest: (...morePathParts: Array<PathPart<any>>) => {
+      return _routeCreator([...pathParts, ...morePathParts], queryParams)
+    }
   };
 }

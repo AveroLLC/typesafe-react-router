@@ -172,4 +172,10 @@ describe('Route', () => {
       garbage2: '2/1/2018',
     });
   });
+
+  test('extend', () => {
+    Object.keys(Routes).forEach(k => {
+      expect(Routes[k].nest('new', param('param')).template()).toEqual(`${expectedTemplate[k]}/new/:param`);
+    });
+  })
 });
