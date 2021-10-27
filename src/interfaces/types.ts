@@ -30,6 +30,7 @@ export interface Route<
   ) => Route<Parts, [QueryParams[number] | T[number]]>;
 
   parse(queryString: string): Partial<Record<QueryParams[number], string>>;
+  nest(): Route<Parts, QueryParams>
 }
 
 export interface PathParam<T extends string> {
