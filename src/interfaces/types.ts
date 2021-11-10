@@ -11,6 +11,8 @@
    limitations under the License.
  */
 
+import { Params } from "react-router-dom";
+
 export interface Route<
   Parts extends string,
   QueryParams extends QueryParamDefault
@@ -31,7 +33,7 @@ export interface Route<
 
   useQueryParams(): Partial<QueryParams>;
 
-  useParams(): Record<GetParam<Parts>, string>;
+  useParams(): Params<GetParam<Parts>>;
 }
 
 /**

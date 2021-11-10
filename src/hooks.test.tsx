@@ -13,7 +13,7 @@
 
 import { route } from "./route";
 import TestRenderer, { ReactTestRendererJSON } from "react-test-renderer";
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
+import { MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
 import React from "react";
 
 jest.mock("react-router-dom", () => ({
@@ -49,26 +49,38 @@ function Comp() {
 
 describe("Hooks", () => {
   test("valid param", () => {
+    function ResponseComp(props: any) {
+      return <p {...props} />;
+    }
     function Comp() {
       const { id } = homeRoute.useParams();
       const { search, withDefault } = homeRoute.useQueryParams();
 
-      return <p {...{ id, search, withDefault }} />;
+      return <ResponseComp {...{ id, search, withDefault }} />;
     }
 
     const testRenderer = TestRenderer.create(
-      <BrowserRouter>
-        <Route path={homeRoute.template()} component={Comp} />
-        <Route
-          path={"*"}
-          render={() => (
-            <Redirect
-              to={homeRoute.create({ id: "12345", query: { search: "s" } })}
-            />
-          )}
-        />
-      </BrowserRouter>
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/home/12345",
+            search: "?search=s",
+          },
+        ]}>
+        <Routes>
+          <Route path={homeRoute.template()} element={<Comp />} />
+          <Route
+            path={"/"}
+            element={
+              <Navigate
+                to={homeRoute.create({ id: "12345", query: { search: "s" } })}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>
     );
+    console.log(testRenderer.toJSON());
 
     expect((testRenderer.toJSON() as ReactTestRendererJSON).props.id).toBe(
       "12345"
