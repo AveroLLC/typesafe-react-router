@@ -93,7 +93,6 @@ export function route<T extends string, Q extends QueryParamDefault>(
      */
     useQueryParams() {
       const { search } = useLocation();
-
       return useMemo(
         () =>
           ({
@@ -105,7 +104,7 @@ export function route<T extends string, Q extends QueryParamDefault>(
     },
 
     useParams() {
-      return useParams<Record<GetParam<T>, string>>();
+      return useParams<GetParam<T>>();
     },
   };
 }
