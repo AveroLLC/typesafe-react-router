@@ -17,7 +17,10 @@ export interface Route<
   Parts extends string,
   QueryParams extends QueryParamDefault
 > {
-  template(): string;
+  template(options?: {
+    /** default is `false` */
+    hasNested?: boolean;
+  }): string;
 
   create: CreateFun<Parts, QueryParams>;
 

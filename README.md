@@ -96,3 +96,12 @@ export const Users = () => {
   /// withDefault === "default" is true
 };
 ```
+
+## Nested routes
+
+```js
+<Route
+  path={Routes.details.template({ hasNested: true })} // /details/*
+  component={Details}
+/>
+```

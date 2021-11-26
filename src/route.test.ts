@@ -67,6 +67,15 @@ describe("Route", () => {
         expectedTemplate[k as keyof typeof expectedTemplate]
       );
     });
+
+    expect(Routes[RouteNames.HOME].template()).toBe("/home");
+    expect(Routes[RouteNames.HOME].template({ hasNested: true })).toBe(
+      "/home/*"
+    );
+
+    expect(Routes[RouteNames.VIEW_DETAILS].template({ hasNested: true })).toBe(
+      "/view/:id/*"
+    );
   });
 
   test("Create", () => {

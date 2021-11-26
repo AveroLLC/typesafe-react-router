@@ -49,8 +49,8 @@ export function route<T extends string, Q extends QueryParamDefault>(
   }
 
   return {
-    template: () => {
-      return getPathBegin(paths) + paths.join("/");
+    template: ({ hasNested = false } = {}) => {
+      return getPathBegin(paths) + paths.join("/") + (hasNested ? "/*" : "");
     },
     create: (params: Record<any, any> = {}) => {
       const baseUrl =

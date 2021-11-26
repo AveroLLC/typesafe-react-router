@@ -57,6 +57,7 @@
   "exclude": [
     "node_modules",
     "dest",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

@@ -17,7 +17,7 @@ import { MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
 import React from "react";
 
 jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+  ...(jest.requireActual("react-router-dom") as any),
   useHistory: () => ({
     location: {
       pathname: "",
@@ -52,6 +52,7 @@ describe("Hooks", () => {
     function ResponseComp(props: any) {
       return <p {...props} />;
     }
+
     function Comp() {
       const { id } = homeRoute.useParams();
       const { search, withDefault } = homeRoute.useQueryParams();
@@ -66,7 +67,8 @@ describe("Hooks", () => {
             pathname: "/home/12345",
             search: "?search=s",
           },
-        ]}>
+        ]}
+      >
         <Routes>
           <Route path={homeRoute.template()} element={<Comp />} />
           <Route
@@ -80,7 +82,6 @@ describe("Hooks", () => {
         </Routes>
       </MemoryRouter>
     );
-    console.log(testRenderer.toJSON());
 
     expect((testRenderer.toJSON() as ReactTestRendererJSON).props.id).toBe(
       "12345"
