@@ -45,7 +45,6 @@
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "react-router-dom": ">=5",
     "typescript": "^4.1.5"
   },
   "jest": {
