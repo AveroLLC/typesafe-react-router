@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router";
 
 /*
    Copyright Avero, LLC
@@ -20,23 +20,25 @@ import { useMemo } from "react";
 
 const __DEV__ = process.env.NODE_ENV !== "production";
 
-function getPathBegin(path: string[]) {
-  return path[0] === "*" ? "" : "/";
-}
-
 export function route<T extends string, Q extends QueryParamDefault>(
   param:
     | {
         path: T[] | T;
         query?: Q;
+        hasNested?: boolean;
       }
     | T[]
     | T
-): Route<T, Q> {
-  const { path, query } =
-    typeof param === "string" || Array.isArray(param)
-      ? { path: param, query: undefined }
-      : param;
+) {
+  const {
+    path,
+    query,
+    hasNested = false,
+    // @ts-ignore
+    _relatedFrom,
+  } = typeof param === "string" || Array.isArray(param)
+    ? { path: param, query: undefined }
+    : param;
 
   const paths = Array.isArray(path) ? path : [path];
   if (__DEV__) {
@@ -48,24 +50,28 @@ export function route<T extends string, Q extends QueryParamDefault>(
     }
   }
 
-  return {
-    template: ({ hasNested = false } = {}) => {
-      return getPathBegin(paths) + paths.join("/") + (hasNested ? "/*" : "");
+  const result: Route<T, Q> = {
+    template: () => {
+      let path = paths.slice(_relatedFrom || 0).join("/");
+
+      if (!_relatedFrom) {
+        path = `/${path}`;
+      }
+
+      return path + (hasNested ? "/*" : "");
     },
     create: (params: Record<any, any> = {}) => {
-      const baseUrl =
-        getPathBegin(paths) +
-        paths
-          .map((part) => {
-            if (part === "*") {
-              return location.pathname;
-            }
-            if (isParam(part)) {
-              return params[(part as string).slice(1)];
-            }
-            return part;
-          })
-          .join("/");
+      const baseUrl = `/${paths
+        .map((part) => {
+          if (part === "*") {
+            return location.pathname;
+          }
+          if (isParam(part)) {
+            return params[(part as string).slice(1)];
+          }
+          return part;
+        })
+        .join("/")}`;
 
       const queryString =
         Object.keys(params.query || {}).length === 0
@@ -76,16 +82,23 @@ export function route<T extends string, Q extends QueryParamDefault>(
     },
 
     route(_param) {
-      const { path: _path, query: _query } =
-        typeof _param === "string" || Array.isArray(_param)
-          ? { path: _param, query: undefined }
-          : _param;
+      const {
+        path: _path,
+        query: _query,
+        hasNested: _hasNested = false,
+      } = typeof _param === "string" || Array.isArray(_param)
+        ? { path: _param, query: undefined }
+        : _param;
 
       const _paths = Array.isArray(_path) ? _path : [_path];
+      const path = [...paths, ..._paths];
 
       return route({
-        path: [...paths, ..._paths],
+        path,
         query: { ...query, ..._query } as any,
+        hasNested: _hasNested,
+        //@ts-ignore
+        _relatedFrom: hasNested ? paths.length : _relatedFrom,
       });
     },
     /**
@@ -107,4 +120,6 @@ export function route<T extends string, Q extends QueryParamDefault>(
       return useParams<GetParam<T>>();
     },
   };
+
+  return result;
 }

@@ -1,6 +1,6 @@
 # react-route-type
 
-A collection of types and utility functions to facilitate typesafe routing in React-Router.
+A collection of types and utility functions to facilitate typesafe routing in React-Router or react-router-dom and react-router-native.
 
 npm
 
@@ -100,8 +100,43 @@ export const Users = () => {
 ## Nested routes
 
 ```js
-<Route
-  path={Routes.details.template({ hasNested: true })} // /details/*
-  component={Details}
-/>
+const home = route("home");
+const settings = route({ path: "settings", hasNested: true });
+const settingGlobal = settings.route("global");
+const settingAdvanced = settings.route("advanced");
+// App.js
+function App() {
+  return (
+    <Routes>
+      <Route
+        path={home.template()} // "/home"
+        element={<Home />}
+      />
+      <Route
+        path={settings.template()} // "/settings/*"
+        element={<Messages />}
+      />
+    </Routes>
+  );
+}
+
+// Messages.js
+function Messages() {
+  return (
+    <Container>
+      <Conversations />
+
+      <Routes>
+        <Route
+          path={settingGlobal.template()} // "global"
+          element={<Global />}
+        />
+        <Route
+          path={settingGlobal.template()} // "advanced"
+          element={<Advanced />}
+        />
+      </Routes>
+    </Container>
+  );
+}
 ```

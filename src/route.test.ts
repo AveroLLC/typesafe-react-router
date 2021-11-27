@@ -69,13 +69,18 @@ describe("Route", () => {
     });
 
     expect(Routes[RouteNames.HOME].template()).toBe("/home");
-    expect(Routes[RouteNames.HOME].template({ hasNested: true })).toBe(
-      "/home/*"
-    );
+  });
 
-    expect(Routes[RouteNames.VIEW_DETAILS].template({ hasNested: true })).toBe(
-      "/view/:id/*"
+  test("Nested", () => {
+    const home = route({ path: "home", hasNested: true });
+    const view = home.route({ path: "view", hasNested: true });
+    expect(home.template()).toBe("/home/*");
+    expect(home.route("dashboard").template()).toBe("dashboard");
+    expect(view.template()).toBe("view/*");
+    expect(view.route("notif").route("details").template()).toBe(
+      "notif/details"
     );
+    expect(view.route(["details", ":id"]).template()).toBe("details/:id");
   });
 
   test("Create", () => {
