@@ -1,6 +1,6 @@
 # react-route-type
 
-A collection of types and utility functions to facilitate typesafe routing in React-Router or react-router-dom and react-router-native.
+A collection of types and utility functions to facilitate typesafe routing in react-router-dom and react-router-native.
 
 npm
 

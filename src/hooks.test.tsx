@@ -25,12 +25,10 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
-const homeRoute = route({
-  path: ["home", ":id"],
+const homeRoute = route(["home", ":id"], {
   query: { search: "", withDefault: "default" },
 });
-const tsRoute = homeRoute.route({
-  path: ["list", ":name"],
+const tsRoute = homeRoute.route(["list", ":name"], {
   query: { type: "" },
 });
 

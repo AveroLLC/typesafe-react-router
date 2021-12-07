@@ -28,22 +28,17 @@ enum RouteNames {
 const Routes = {
   [RouteNames.HOME]: route("home"),
   [RouteNames.VIEW]: route("view"),
-  [RouteNames.VIEW_DETAILS]: route({ path: ["view", ":id"] }),
-  [RouteNames.VIEW_MORE_DETAILS]: route({
-    path: ["view", ":id", "more", ":otherId"],
-  }),
-  [RouteNames.ONLY_PARAM]: route({ path: ":param" }),
-  [RouteNames.WITH_QUERY]: route({ path: ":id", query: { dateCreated: "" } }),
-  [RouteNames.EMPTY_QUERY]: route({ path: [":id"] }),
-  [RouteNames.MULTI_CALL_QUERY]: route({
-    path: [":id"],
+  [RouteNames.VIEW_DETAILS]: route(["view", ":id"]),
+  [RouteNames.VIEW_MORE_DETAILS]: route(["view", ":id", "more", ":otherId"]),
+  [RouteNames.ONLY_PARAM]: route(":param"),
+  [RouteNames.WITH_QUERY]: route(":id", { query: { dateCreated: "" } }),
+  [RouteNames.EMPTY_QUERY]: route([":id"]),
+  [RouteNames.MULTI_CALL_QUERY]: route([":id"], {
     query: { dateCreated: "", dateUpdated: "" },
   }),
-  [RouteNames.MULTI_QUERY]: route({
-    path: "home",
+  [RouteNames.MULTI_QUERY]: route("home", {
     query: { dateCreated: "" as string | null },
-  }).route({
-    path: ":id",
+  }).route(":id", {
     query: { dateUpdated: "" },
   }),
 };
@@ -72,8 +67,8 @@ describe("Route", () => {
   });
 
   test("Nested", () => {
-    const home = route({ path: "home", hasNested: true });
-    const view = home.route({ path: "view", hasNested: true });
+    const home = route("home", { hasNested: true });
+    const view = home.route("view", { hasNested: true });
     expect(home.template()).toBe("/home/*");
     expect(home.route("dashboard").template()).toBe("dashboard");
     expect(view.template()).toBe("view/*");
@@ -165,10 +160,12 @@ describe("Route", () => {
   });
 });
 
-const tsRoute = route({ path: ["home", ":id"], query: { search: "" } }).route({
-  path: ["list", ":name"],
-  query: { type: "" },
-});
+const tsRoute = route(["home", ":id"], { query: { search: "" } }).route(
+  ["list", ":name"],
+  {
+    query: { type: "" },
+  }
+);
 
 function Comp() {
   const { id, name } = tsRoute.useParams();

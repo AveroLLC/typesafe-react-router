@@ -22,14 +22,11 @@ export interface Route<
   create: CreateFun<Parts, QueryParams>;
 
   route: <Parts1 extends string, QueryParams1 extends QueryParamDefault>(
-    arg:
-      | {
-          path: Parts1[] | Parts1;
-          query?: QueryParams1;
-          hasNested?: boolean;
-        }
-      | Parts1
-      | Parts1[]
+    arg: Parts1 | Parts1[],
+    option?: {
+      query?: QueryParams1;
+      hasNested?: boolean;
+    }
   ) => Route<Parts1 | Parts, QueryParams & QueryParams1>;
 
   useQueryParams(): Partial<QueryParams>;

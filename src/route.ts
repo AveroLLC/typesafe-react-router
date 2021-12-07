@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useParams } from "./reactRouter";
 
 /*
    Copyright Avero, LLC
@@ -21,24 +21,18 @@ import { useMemo } from "react";
 const __DEV__ = process.env.NODE_ENV !== "production";
 
 export function route<T extends string, Q extends QueryParamDefault>(
-  param:
-    | {
-        path: T[] | T;
-        query?: Q;
-        hasNested?: boolean;
-      }
-    | T[]
-    | T
+  path: T[] | T,
+  option: {
+    query?: Q;
+    hasNested?: boolean;
+  } = {}
 ) {
   const {
-    path,
     query,
     hasNested = false,
     // @ts-ignore
     _relatedFrom,
-  } = typeof param === "string" || Array.isArray(param)
-    ? { path: param, query: undefined }
-    : param;
+  } = option;
 
   const paths = Array.isArray(path) ? path : [path];
   if (__DEV__) {
@@ -81,20 +75,13 @@ export function route<T extends string, Q extends QueryParamDefault>(
       return queryString ? `${baseUrl}?${queryString}` : baseUrl;
     },
 
-    route(_param) {
-      const {
-        path: _path,
-        query: _query,
-        hasNested: _hasNested = false,
-      } = typeof _param === "string" || Array.isArray(_param)
-        ? { path: _param, query: undefined }
-        : _param;
+    route(_path, options = {}) {
+      const { query: _query, hasNested: _hasNested = false } = options;
 
       const _paths = Array.isArray(_path) ? _path : [_path];
       const path = [...paths, ..._paths];
 
-      return route({
-        path,
+      return route(path, {
         query: { ...query, ..._query } as any,
         hasNested: _hasNested,
         //@ts-ignore
