@@ -1,6 +1,6 @@
 {
   "name": "react-route-type",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
@@ -40,15 +40,15 @@
     "react": "^17.0.1",
     "react-router-dom": "^6.0.2",
     "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.5.1",
     "typedoc": "^0.21.5",
-    "rimraf": "^3.0.2",
     "typedoc-plugin-markdown": "^3.10.4",
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "typescript": "^4.1.5",
-    "react-router-dom": "6>="
+    "react-router-dom": "6>=",
+    "typescript": "^4.1.5"
   },
   "jest": {
     "transform": {
