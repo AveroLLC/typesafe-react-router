@@ -16,10 +16,10 @@ yarn
 import { route } from "react-route-type";
 
 export const Routes = {
-  home: route({ path: ["home"] }),
-  view: route({ path: ["view"] }),
-  details: route({ path: ["view", ":id"] }),
-  users: route({ path: ["users"], query: { search: "" } }),
+  home: route("home"),
+  view: route("view"),
+  details: route(["view", ":id"]),
+  users: route("users", { query: { search: "" } }),
 };
 
 const viewDetailsTemplate = Routes.details.template(); // -> /view/:id
@@ -61,7 +61,7 @@ Params is required
 
 ```js
 export const Routes = {
-  details: route({ path: ["view", ":id"] }),
+  details: route(["view", ":id"]),
 };
 
 // route
@@ -85,8 +85,7 @@ export const View = () => {
 With Default value
 
 ```js
-const users = route({
-  path: ["users"],
+const users = route(["users"], {
   query: { withDefault: "default" },
 });
 
@@ -101,7 +100,7 @@ export const Users = () => {
 
 ```js
 const home = route("home");
-const settings = route({ path: "settings", hasNested: true });
+const settings = route("settings", { hasNested: true });
 const settingGlobal = settings.route("global");
 const settingAdvanced = settings.route("advanced");
 // App.js
