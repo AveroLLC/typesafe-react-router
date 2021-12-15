@@ -125,6 +125,9 @@ describe("Hooks", () => {
 
     const json = testRenderer.toJSON() as ReactTestRendererJSON;
 
+    expect(json.props.routeMap[0].create()).toBe("/home/12345");
+    expect(json.props.routeMap[1].create()).toBe("/home/12345/list/leon");
+
     expect(json.props.routeMap).toMatchObject([
       {
         create: expect.any(Function),

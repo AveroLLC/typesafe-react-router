@@ -138,7 +138,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
           {
             path,
             create: () => {
-              return result.create(match?.params);
+              return _routes.create(match?.params);
             },
             title,
           },
