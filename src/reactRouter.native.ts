@@ -1,4 +1,4 @@
 //@ts-ignore
-import { useLocation, useParams } from "react-router-native";
+import { useLocation, useParams, useMatch } from "react-router-native";
 
-export { useLocation, useParams };
+export { useLocation, useParams, useMatch };

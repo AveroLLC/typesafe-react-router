@@ -46,11 +46,38 @@ function Comp() {
 }
 
 describe("Hooks", () => {
-  test("valid param", () => {
-    function ResponseComp(props: any) {
-      return <p {...props} />;
-    }
+  function ResponseComp(props: any) {
+    return <p {...props} />;
+  }
 
+  function RouteContainer({
+    initialPath,
+    template,
+    Comp,
+  }: {
+    initialPath: string;
+    template: string;
+    Comp: any;
+  }) {
+    const [pathname, search] = initialPath.split("?");
+    return (
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: pathname,
+            search: "?" + search,
+          },
+        ]}
+      >
+        <Routes>
+          <Route path={template} element={<Comp />} />
+          <Route path={"/"} element={<Navigate to={initialPath} />} />
+        </Routes>
+      </MemoryRouter>
+    );
+  }
+
+  test("valid param", () => {
     function Comp() {
       const { id } = homeRoute.useParams();
       const { search, withDefault } = homeRoute.useQueryParams();
@@ -59,38 +86,54 @@ describe("Hooks", () => {
     }
 
     const testRenderer = TestRenderer.create(
-      <MemoryRouter
-        initialEntries={[
-          {
-            pathname: "/home/12345",
-            search: "?search=s",
-          },
-        ]}
-      >
-        <Routes>
-          <Route path={homeRoute.template()} element={<Comp />} />
-          <Route
-            path={"/"}
-            element={
-              <Navigate
-                to={homeRoute.create({ id: "12345", query: { search: "s" } })}
-              />
-            }
-          />
-        </Routes>
-      </MemoryRouter>
+      <RouteContainer
+        template={homeRoute.template()}
+        initialPath={homeRoute.create({ id: "12345", query: { search: "s" } })}
+        Comp={Comp}
+      />
     );
 
-    expect((testRenderer.toJSON() as ReactTestRendererJSON).props.id).toBe(
-      "12345"
+    const json = testRenderer.toJSON() as ReactTestRendererJSON;
+
+    expect(json.props.id).toBe("12345");
+
+    expect(json.props.search).toBe("s");
+
+    expect(json.props.withDefault).toBe("default");
+  });
+
+  test("map of routes", () => {
+    function Comp() {
+      const routeMap = tsRoute.useMap();
+
+      return <ResponseComp {...{ routeMap }} />;
+    }
+
+    const testRenderer = TestRenderer.create(
+      <RouteContainer
+        template={tsRoute.template()}
+        initialPath={tsRoute.create({
+          id: "12345",
+          name: "leon",
+          query: { type: "type1" },
+        })}
+        Comp={Comp}
+      />
     );
 
-    expect((testRenderer.toJSON() as ReactTestRendererJSON).props.search).toBe(
-      "s"
-    );
+    const json = testRenderer.toJSON() as ReactTestRendererJSON;
 
-    expect(
-      (testRenderer.toJSON() as ReactTestRendererJSON).props.withDefault
-    ).toBe("default");
+    expect(json.props.routeMap).toMatchObject([
+      {
+        create: expect.any(Function),
+        path: ["home", ":id"],
+        title: undefined,
+      },
+      {
+        create: expect.any(Function),
+        path: ["home", ":id", "list", ":name"],
+        title: undefined,
+      },
+    ]);
   });
 });

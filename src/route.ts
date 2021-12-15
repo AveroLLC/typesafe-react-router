@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "./reactRouter";
+import { useLocation, useParams, useMatch } from "./reactRouter";
 
 /*
    Copyright Avero, LLC
@@ -13,26 +13,36 @@ import { useLocation, useParams } from "./reactRouter";
    limitations under the License.
  */
 
-import { GetParam, QueryParamDefault, Route } from "./interfaces/types";
+import {
+  GetParam,
+  Options,
+  QueryParamDefault,
+  Route,
+} from "./interfaces/types";
 import { isParam } from "./interfaces/guards";
 import { stringify } from "qs";
 import { useMemo } from "react";
 
 const __DEV__ = process.env.NODE_ENV !== "production";
 
-export function route<T extends string, Q extends QueryParamDefault>(
+interface InternalOptions<Q extends QueryParamDefault> extends Options<Q> {
+  relatedFrom?: number;
+  parent?: InternalRoute<string, any>;
+}
+
+interface InternalRoute<T extends string, Q extends QueryParamDefault>
+  extends Route<T, Q> {
+  path: T[] | T;
+  option: InternalOptions<Q>;
+  parent?: InternalRoute<string, any>;
+  title?: string;
+}
+
+function internalRoute<T extends string, Q extends QueryParamDefault>(
   path: T[] | T,
-  option: {
-    query?: Q;
-    hasNested?: boolean;
-  } = {}
+  option: InternalOptions<Q> = {}
 ) {
-  const {
-    query,
-    hasNested = false,
-    // @ts-ignore
-    _relatedFrom,
-  } = option;
+  const { query, hasNested = false, relatedFrom, parent, title } = option;
 
   const paths = Array.isArray(path) ? path : [path];
   if (__DEV__) {
@@ -44,11 +54,15 @@ export function route<T extends string, Q extends QueryParamDefault>(
     }
   }
 
-  const result: Route<T, Q> = {
+  const result: InternalRoute<T, Q> = {
+    parent,
+    option,
+    path,
+    title,
     template: () => {
-      let path = paths.slice(_relatedFrom || 0).join("/");
+      let path = paths.slice(relatedFrom || 0).join("/");
 
-      if (!_relatedFrom) {
+      if (!relatedFrom) {
         path = `/${path}`;
       }
 
@@ -81,11 +95,11 @@ export function route<T extends string, Q extends QueryParamDefault>(
       const _paths = Array.isArray(_path) ? _path : [_path];
       const path = [...paths, ..._paths];
 
-      return route(path, {
+      return internalRoute(path, {
         query: { ...query, ..._query } as any,
         hasNested: _hasNested,
-        //@ts-ignore
-        _relatedFrom: hasNested ? paths.length : _relatedFrom,
+        parent: result,
+        relatedFrom: hasNested ? paths.length : relatedFrom,
       });
     },
     /**
@@ -106,7 +120,41 @@ export function route<T extends string, Q extends QueryParamDefault>(
     useParams() {
       return useParams<GetParam<T>>();
     },
+    useMap() {
+      const match = useMatch(result.template());
+
+      function generateMap(
+        _routes?: InternalRoute<string, any>
+      ): ReturnType<InternalRoute<T, Q>["useMap"]> {
+        if (!_routes) {
+          return [];
+        }
+
+        const { path, title } = _routes;
+
+        return [
+          ...generateMap(_routes?.parent),
+          {
+            path,
+            create: () => {
+              return result.create(match?.params);
+            },
+            title,
+          },
+        ].filter(Boolean);
+      }
+
+      return generateMap(result);
+    },
   };
 
   return result;
 }
+
+export const route: <T extends string, Q extends QueryParamDefault>(
+  path: T[] | T,
+  option?: {
+    query?: Q;
+    hasNested?: boolean;
+  }
+) => Route<T, Q> = internalRoute;

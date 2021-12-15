@@ -13,6 +13,23 @@
 
 import { Params } from "react-router-dom";
 
+/**
+ * @ignore
+ */
+export type QueryParamDefault = Record<
+  string,
+  | string
+  | Array<string | Array<any> | Record<string, any> | null>
+  | Record<string, any>
+  | null
+>;
+
+export interface Options<Q extends QueryParamDefault> {
+  query?: Q;
+  hasNested?: boolean;
+  title?: string;
+}
+
 export interface Route<
   Parts extends string,
   QueryParams extends QueryParamDefault
@@ -23,15 +40,17 @@ export interface Route<
 
   route: <Parts1 extends string, QueryParams1 extends QueryParamDefault>(
     arg: Parts1 | Parts1[],
-    option?: {
-      query?: QueryParams1;
-      hasNested?: boolean;
-    }
+    option?: Options<QueryParams1>
   ) => Route<Parts1 | Parts, QueryParams & QueryParams1>;
 
   useQueryParams(): Partial<QueryParams>;
 
   useParams(): Params<GetParam<Parts>>;
+  useMap(): {
+    path: string | string[];
+    title?: string;
+    create(): string;
+  }[];
 }
 
 /**
@@ -45,17 +64,6 @@ export type PathParam<T extends string> = T extends `:${infer A}` ? A : never;
 export type PathPart<T extends string> = string | PathParam<T>;
 
 export type GetParam<T extends string> = T extends `:${infer A}` ? A : never;
-
-/**
- * @ignore
- */
-export type QueryParamDefault = Record<
-  string,
-  | string
-  | Array<string | Array<any> | Record<string, any> | null>
-  | Record<string, any>
-  | null
->;
 
 /**
  * @ignore

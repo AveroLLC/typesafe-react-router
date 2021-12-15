@@ -131,11 +131,17 @@ function Messages() {
           element={<Global />}
         />
         <Route
-          path={settingGlobal.template()} // "advanced"
+          path={settingAdvanced.template()} // "advanced"
           element={<Advanced />}
         />
       </Routes>
     </Container>
   );
 }
+```
+
+### useMap
+
+```js
+const routeMap = settingAdvanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
 ```
