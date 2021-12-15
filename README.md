@@ -142,6 +142,19 @@ function Messages() {
 
 ### useMap
 
+This is useful for create breadcrumb
+
 ```js
 const routeMap = settingAdvanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
+
+return (
+  //antd
+  <Breadcrumb>
+    {routeMap.map(({ path, create }) => {
+      <Breadcrumb.Item key={path}>
+        <a href={create()}></a>
+      </Breadcrumb.Item>;
+    })}
+  </Breadcrumb>
+);
 ```
