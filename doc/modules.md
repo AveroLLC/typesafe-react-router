@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[interfaces/types.ts:66](https://github.com/hosseinmd/react-route-type/blob/9f75145/src/interfaces/types.ts#L66)
+[interfaces/types.ts:66](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L66)
 
 ## Functions
 
@@ -61,4 +61,4 @@
 
 #### Defined in
 
-[route.ts:154](https://github.com/hosseinmd/react-route-type/blob/9f75145/src/route.ts#L154)
+[route.ts:154](https://github.com/hosseinmd/react-route-type/blob/0034844/src/route.ts#L154)

@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[interfaces/types.ts:29](https://github.com/hosseinmd/react-route-type/blob/9f75145/src/interfaces/types.ts#L29)
+[interfaces/types.ts:29](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L29)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:28](https://github.com/hosseinmd/react-route-type/blob/9f75145/src/interfaces/types.ts#L28)
+[interfaces/types.ts:28](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L28)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:30](https://github.com/hosseinmd/react-route-type/blob/9f75145/src/interfaces/types.ts#L30)
+[interfaces/types.ts:30](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L30)
