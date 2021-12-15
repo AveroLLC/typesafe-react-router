@@ -90,7 +90,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
     },
 
     route(_path, options = {}) {
-      const { query: _query, hasNested: _hasNested = false } = options;
+      const { query: _query, title, hasNested: _hasNested = false } = options;
 
       const _paths = Array.isArray(_path) ? _path : [_path];
       const path = [...paths, ..._paths];
@@ -99,6 +99,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
         query: { ...query, ..._query } as any,
         hasNested: _hasNested,
         parent: result,
+        title,
         relatedFrom: hasNested ? paths.length : relatedFrom,
       });
     },
@@ -153,8 +154,5 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
 
 export const route: <T extends string, Q extends QueryParamDefault>(
   path: T[] | T,
-  option?: {
-    query?: Q;
-    hasNested?: boolean;
-  }
+  option?: Options<Q>
 ) => Route<T, Q> = internalRoute;

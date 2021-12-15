@@ -27,9 +27,11 @@ jest.mock("react-router-dom", () => ({
 
 const homeRoute = route(["home", ":id"], {
   query: { search: "", withDefault: "default" },
+  title: "Home",
 });
 const tsRoute = homeRoute.route(["list", ":name"], {
   query: { type: "" },
+  title: "List",
 });
 
 function Comp() {
@@ -127,12 +129,12 @@ describe("Hooks", () => {
       {
         create: expect.any(Function),
         path: ["home", ":id"],
-        title: undefined,
+        title: "Home",
       },
       {
         create: expect.any(Function),
         path: ["home", ":id", "list", ":name"],
-        title: undefined,
+        title: "List",
       },
     ]);
   });
