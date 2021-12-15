@@ -29,7 +29,7 @@
     "tsc": "tsc --declaration -outDir dest",
     "clean": "rimraf dest",
     "prepare": "yarn clean && yarn tsc",
-    "prepublish": "typedoc src/index.ts",
+    "typedoc": "typedoc src/index.ts",
     "test": "yarn prepare && jest"
   },
   "devDependencies": {

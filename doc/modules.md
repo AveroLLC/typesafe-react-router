@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[interfaces/types.ts:66](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L66)
+[interfaces/types.ts:66](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L66)
 
 ## Functions
 
@@ -51,9 +51,7 @@
 | Name | Type |
 | :------ | :------ |
 | `path` | `T` \| `T`[] |
-| `option?` | `Object` |
-| `option.hasNested?` | `boolean` |
-| `option.query?` | `Q` |
+| `option?` | [`Options`](interfaces/Options.md)<`Q`\> |
 
 #### Returns
 
@@ -61,4 +59,4 @@
 
 #### Defined in
 
-[route.ts:154](https://github.com/hosseinmd/react-route-type/blob/0034844/src/route.ts#L154)
+[route.ts:155](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/route.ts#L155)

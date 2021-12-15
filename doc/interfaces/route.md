@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[interfaces/types.ts:39](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L39)
+[interfaces/types.ts:39](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L39)
 
 ## Methods
 
@@ -59,7 +59,7 @@
 
 #### Defined in
 
-[interfaces/types.ts:41](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L41)
+[interfaces/types.ts:41](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L41)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:37](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L37)
+[interfaces/types.ts:37](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L37)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:49](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L49)
+[interfaces/types.ts:49](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L49)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:48](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L48)
+[interfaces/types.ts:48](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L48)
 
 ___
 
@@ -115,4 +115,4 @@ ___
 
 #### Defined in
 
-[interfaces/types.ts:46](https://github.com/hosseinmd/react-route-type/blob/0034844/src/interfaces/types.ts#L46)
+[interfaces/types.ts:46](https://github.com/hosseinmd/react-route-type/blob/3deaec5/src/interfaces/types.ts#L46)
