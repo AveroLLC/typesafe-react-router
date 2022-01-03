@@ -68,14 +68,16 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
 
       return path + (hasNested ? "/*" : "");
     },
-    create: (params: Record<any, any> = {}) => {
+    create: (params = {}) => {
       const baseUrl = `/${paths
-        .map((part) => {
+        .map((part: string) => {
           if (part === "*") {
             return location.pathname;
           }
           if (isParam(part)) {
-            return params[(part as string).slice(1)];
+            return (params as Record<string, string>)[
+              (part as string).slice(1)
+            ];
           }
           return part;
         })
