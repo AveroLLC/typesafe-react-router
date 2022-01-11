@@ -64,7 +64,7 @@ export const Routes = {
   details: route(["view", ":id"]),
 };
 
-// route
+// "/view/:id"
 <Route path={Routes.details.template()} component={Details} />;
 
 export const Details = () => {
@@ -113,14 +113,14 @@ function App() {
       />
       <Route
         path={settings.template()} // "/settings/*"
-        element={<Messages />}
+        element={<Settings />}
       />
     </Routes>
   );
 }
 
-// Messages.js
-function Messages() {
+// Settings.js
+function Settings() {
   return (
     <Container>
       <Conversations />
