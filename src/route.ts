@@ -14,7 +14,7 @@ import { useLocation, useParams, useMatch } from "./reactRouter";
  */
 
 import {
-  GetParam,
+  PathParam,
   Options,
   QueryParamDefault,
   Route,
@@ -121,7 +121,9 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
     },
 
     useParams() {
-      return useParams<GetParam<T>>();
+      return useParams<PathParam<T>>() as unknown as ReturnType<
+        InternalRoute<T, Q>["useParams"]
+      >;
     },
     useMap() {
       const match = useMatch(result.template());

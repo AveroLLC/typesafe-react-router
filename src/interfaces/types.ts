@@ -45,7 +45,7 @@ export interface Route<
 
   useQueryParams(): Partial<QueryParams>;
 
-  useParams(): Params<GetParam<Parts>>;
+  useParams(): Required<Params<PathParam<Parts>>>;
   useMap(): {
     path: string | string[];
     title?: string;
@@ -63,8 +63,6 @@ export type PathParam<T extends string> = T extends `:${infer A}` ? A : never;
  */
 export type PathPart<T extends string> = string | PathParam<T>;
 
-export type GetParam<T extends string> = T extends `:${infer A}` ? A : never;
-
 /**
  * @ignore
  */
@@ -73,7 +71,7 @@ export type CreateFun<
   QueryParams extends QueryParamDefault
 > = Parts extends `:${infer A}`
   ? (
-      params: Record<GetParam<Parts>, string> & {
+      params: Record<PathParam<Parts>, string> & {
         query?: Partial<QueryParams>;
       }
     ) => string
