@@ -34,6 +34,7 @@ export interface Route<
   Parts extends string,
   QueryParams extends QueryParamDefault
 > {
+  title?: string;
   template(): string;
 
   create: CreateFun<Parts, QueryParams>;

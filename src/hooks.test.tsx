@@ -141,4 +141,14 @@ describe("Hooks", () => {
       },
     ]);
   });
+
+  test("route title", () => {
+    const home = route("home", { title: "home title" });
+    const dashboard = home.route("dashboard");
+    const my = dashboard.route("my", { title: "my title" });
+
+    expect(home.title).toBe("home title");
+    expect(dashboard.title).toBe(undefined);
+    expect(my.title).toBe("my title");
+  });
 });

@@ -35,7 +35,6 @@ interface InternalRoute<T extends string, Q extends QueryParamDefault>
   path: T[] | T;
   option: InternalOptions<Q>;
   parent?: InternalRoute<string, any>;
-  title?: string;
 }
 
 function internalRoute<T extends string, Q extends QueryParamDefault>(
