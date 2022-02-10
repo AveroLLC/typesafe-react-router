@@ -11,7 +11,9 @@
    limitations under the License.
  */
 
-import { Params } from "react-router-dom";
+type Params<Key extends string = string> = {
+  readonly [key in Key]: string;
+};
 
 /**
  * @ignore
