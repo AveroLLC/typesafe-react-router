@@ -41,7 +41,9 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
   path: T[] | T,
   option: InternalOptions<Q> = {}
 ) {
-  const { query, hasNested = false, relatedFrom, parent, title } = option;
+  const { query, relatedFrom, parent, title } = option;
+
+  let hasNested = false;
 
   const paths = Array.isArray(path) ? path : [path];
   if (__DEV__) {
@@ -67,7 +69,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
 
       return path + (hasNested ? "/*" : "");
     },
-    create: (params = {}) => {
+    create: (params = {} as any) => {
       const baseUrl = `/${paths
         .map((part: string) => {
           if (part === "*") {
@@ -91,14 +93,13 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
     },
 
     route(_path, options = {}) {
-      const { query: _query, title, hasNested: _hasNested = false } = options;
+      const { query: _query, title } = options;
 
       const _paths = Array.isArray(_path) ? _path : [_path];
       const path = [...paths, ..._paths];
 
       return internalRoute(path, {
         query: { ...query, ..._query } as any,
-        hasNested: _hasNested,
         parent: result,
         title,
         relatedFrom: hasNested ? paths.length : relatedFrom,
@@ -149,6 +150,11 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
       }
 
       return generateMap(result);
+    },
+    createNestedRoutes(generator) {
+      hasNested = true;
+
+      return { root: result, ...generator(result) };
     },
   };
 

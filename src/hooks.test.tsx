@@ -153,15 +153,14 @@ describe("Hooks", () => {
     const homeRoute = route(["home", ":id"], {
       query: { search: "", withDefault: "default" },
       title: "Home",
-      hasNested: true,
-    });
-    const dashboardRoute = homeRoute.route("dashboard", {
-      hasNested: true,
-    });
-    const userDashboardRoute = dashboardRoute.route("userDashboard");
+    }).createNestedRoutes((parent) => ({
+      dashboard: parent.route("dashboard").createNestedRoutes((parent) => ({
+        userDashboard: parent.route("userDashboard"),
+      })),
+    }));
 
     function Comp() {
-      const list = userDashboardRoute.useMap();
+      const list = homeRoute.dashboard.userDashboard.useMap();
 
       const props = list.reduce(
         (prev, { create }, index) => ({
@@ -175,12 +174,12 @@ describe("Hooks", () => {
     }
 
     function CompChild() {
-      const { id } = dashboardRoute.useParams();
+      const { id } = homeRoute.dashboard.root.useParams();
 
       return (
         <RouteWithButtonContainer
-          template={userDashboardRoute.template()}
-          initialPath={userDashboardRoute.create({
+          template={homeRoute.dashboard.userDashboard.template()}
+          initialPath={homeRoute.dashboard.userDashboard.create({
             id: id,
           })}
           Comp={Comp}
@@ -188,12 +187,12 @@ describe("Hooks", () => {
       );
     }
     function CompParent() {
-      const { id } = homeRoute.useParams();
+      const { id } = homeRoute.root.useParams();
 
       return (
         <RouteWithButtonContainer
-          template={dashboardRoute.template()}
-          initialPath={dashboardRoute.create({
+          template={homeRoute.dashboard.root.template()}
+          initialPath={homeRoute.dashboard.root.create({
             id: id,
             query: { type: "type1" },
           })}
@@ -204,8 +203,11 @@ describe("Hooks", () => {
 
     const testRenderer = render(
       <RouteContainer
-        template={homeRoute.template()}
-        initialPath={homeRoute.create({ id: "12345", query: { search: "s" } })}
+        template={homeRoute.root.template()}
+        initialPath={homeRoute.root.create({
+          id: "12345",
+          query: { search: "s" },
+        })}
         Comp={CompParent}
       />
     );

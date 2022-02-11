@@ -67,15 +67,19 @@ describe("Route", () => {
   });
 
   test("Nested", () => {
-    const home = route("home", { hasNested: true });
-    const view = home.route("view", { hasNested: true });
-    expect(home.template()).toBe("/home/*");
-    expect(home.route("dashboard").template()).toBe("dashboard");
-    expect(view.template()).toBe("view/*");
-    expect(view.route("notif").route("details").template()).toBe(
-      "notif/details"
+    const home = route("home").createNestedRoutes((parent) => ({
+      view: parent.route("view").createNestedRoutes((parent) => ({
+        notif: parent.route("notif"),
+      })),
+      dashboard: parent.route("dashboard"),
+    }));
+    expect(home.root.template()).toBe("/home/*");
+    expect(home.dashboard.template()).toBe("dashboard");
+    expect(home.view.root.template()).toBe("view/*");
+    expect(home.view.notif.route("details").template()).toBe("notif/details");
+    expect(home.view.root.route(["details", ":id"]).template()).toBe(
+      "details/:id"
     );
-    expect(view.route(["details", ":id"]).template()).toBe("details/:id");
   });
 
   test("Create", () => {

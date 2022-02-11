@@ -100,9 +100,11 @@ export const Users = () => {
 
 ```js
 const home = route("home");
-const settings = route("settings", { hasNested: true });
-const settingGlobal = settings.route("global");
-const settingAdvanced = settings.route("advanced");
+const settings = route("settings").createNestedRoutes((parent)=>({
+   global: parent.route("global");
+   advanced: parent.route("advanced");
+}));
+
 // App.js
 function App() {
   return (
@@ -112,7 +114,7 @@ function App() {
         element={<Home />}
       />
       <Route
-        path={settings.template()} // "/settings/*"
+        path={settings.root.template()} // "/settings/*"
         element={<Settings />}
       />
     </Routes>
@@ -127,11 +129,11 @@ function Settings() {
 
       <Routes>
         <Route
-          path={settingGlobal.template()} // "global"
+          path={setting.global.template()} // "global"
           element={<Global />}
         />
         <Route
-          path={settingAdvanced.template()} // "advanced"
+          path={setting.advanced.template()} // "advanced"
           element={<Advanced />}
         />
       </Routes>
@@ -145,7 +147,7 @@ function Settings() {
 This is useful for create breadcrumb
 
 ```js
-const routeMap = settingAdvanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
+const routeMap = setting.advanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
 
 return (
   //antd

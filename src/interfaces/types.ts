@@ -28,7 +28,6 @@ export type QueryParamDefault = Record<
 
 export interface Options<Q extends QueryParamDefault> {
   query?: Q;
-  hasNested?: boolean;
   title?: string;
 }
 
@@ -54,6 +53,11 @@ export interface Route<
     title?: string;
     create(): string;
   }[];
+  createNestedRoutes: <C>(
+    generator: (parent: Route<Parts, QueryParams>) => C
+  ) => {
+    root: Route<Parts, QueryParams>;
+  } & C;
 }
 
 /**
