@@ -12,8 +12,16 @@
  */
 
 import { route } from "./route";
-import TestRenderer, { ReactTestRendererJSON } from "react-test-renderer";
-import { MemoryRouter, Navigate, Route, Routes } from "react-router-dom";
+import { render, fireEvent, waitFor, act } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import {
+  MemoryRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import React from "react";
 
 jest.mock("react-router-dom", () => ({
@@ -79,15 +87,52 @@ describe("Hooks", () => {
     );
   }
 
+  function RouteWithButtonContainer({
+    initialPath,
+    template,
+    Comp,
+  }: {
+    initialPath: string;
+    template: string;
+    Comp: any;
+  }) {
+    return (
+      <Routes>
+        <Route path={template} element={<Comp />} />
+        <Route path={"*"} element={<Navigator {...{ initialPath }} />} />
+      </Routes>
+    );
+  }
+
+  const Navigator = ({ initialPath }: any) => {
+    const navigate = useNavigate();
+
+    return (
+      <button
+        data-testid="navigate"
+        onClick={() => navigate(initialPath)}
+        title={initialPath}
+      >
+        {initialPath}
+      </button>
+    );
+  };
+
   test("valid param", () => {
     function Comp() {
       const { id } = homeRoute.useParams();
       const { search, withDefault } = homeRoute.useQueryParams();
 
-      return <ResponseComp {...{ id, search, withDefault }} />;
+      return (
+        <ResponseComp
+          {...{ id, search }}
+          data-withdefault={withDefault}
+          data-testid="response"
+        />
+      );
     }
 
-    const testRenderer = TestRenderer.create(
+    const testRenderer = render(
       <RouteContainer
         template={homeRoute.template()}
         initialPath={homeRoute.create({ id: "12345", query: { search: "s" } })}
@@ -95,51 +140,95 @@ describe("Hooks", () => {
       />
     );
 
-    const json = testRenderer.toJSON() as ReactTestRendererJSON;
+    const json = testRenderer.getByTestId("response");
 
-    expect(json.props.id).toBe("12345");
+    expect(json.getAttribute("id")).toBe("12345");
 
-    expect(json.props.search).toBe("s");
+    expect(json.getAttribute("search")).toBe("s");
 
-    expect(json.props.withDefault).toBe("default");
+    expect(json.getAttribute("data-withdefault")).toBe("default");
   });
 
   test("map of routes", () => {
-    function Comp() {
-      const routeMap = tsRoute.useMap();
+    const homeRoute = route(["home", ":id"], {
+      query: { search: "", withDefault: "default" },
+      title: "Home",
+      hasNested: true,
+    });
+    const dashboardRoute = homeRoute.route("dashboard", {
+      hasNested: true,
+    });
+    const userDashboardRoute = dashboardRoute.route("userDashboard");
 
-      return <ResponseComp {...{ routeMap }} />;
+    function Comp() {
+      const list = userDashboardRoute.useMap();
+
+      const props = list.reduce(
+        (prev, { create }, index) => ({
+          ...prev,
+          [`data-${index}`]: create(),
+        }),
+        {}
+      );
+
+      return <ResponseComp {...props} data-testid="response" />;
     }
 
-    const testRenderer = TestRenderer.create(
+    function CompChild() {
+      const { id } = dashboardRoute.useParams();
+
+      return (
+        <RouteWithButtonContainer
+          template={userDashboardRoute.template()}
+          initialPath={userDashboardRoute.create({
+            id: id,
+          })}
+          Comp={Comp}
+        />
+      );
+    }
+    function CompParent() {
+      const { id } = homeRoute.useParams();
+
+      return (
+        <RouteWithButtonContainer
+          template={dashboardRoute.template()}
+          initialPath={dashboardRoute.create({
+            id: id,
+            query: { type: "type1" },
+          })}
+          Comp={CompChild}
+        />
+      );
+    }
+
+    const testRenderer = render(
       <RouteContainer
-        template={tsRoute.template()}
-        initialPath={tsRoute.create({
-          id: "12345",
-          name: "leon",
-          query: { type: "type1" },
-        })}
-        Comp={Comp}
+        template={homeRoute.template()}
+        initialPath={homeRoute.create({ id: "12345", query: { search: "s" } })}
+        Comp={CompParent}
       />
     );
 
-    const json = testRenderer.toJSON() as ReactTestRendererJSON;
+    act(() => {
+      fireEvent.click(testRenderer.getByTestId("navigate"));
+    });
 
-    expect(json.props.routeMap[0].create()).toBe("/home/12345");
-    expect(json.props.routeMap[1].create()).toBe("/home/12345/list/leon");
+    const navigate = testRenderer.getByTestId("navigate");
 
-    expect(json.props.routeMap).toMatchObject([
-      {
-        create: expect.any(Function),
-        path: ["home", ":id"],
-        title: "Home",
-      },
-      {
-        create: expect.any(Function),
-        path: ["home", ":id", "list", ":name"],
-        title: "List",
-      },
-    ]);
+    expect(navigate.title).toBe("/home/12345/dashboard/userDashboard");
+
+    act(() => {
+      fireEvent.click(navigate);
+    });
+
+    const json = testRenderer.getByTestId("response");
+
+    expect(json.getAttribute("data-0")).toBe("/home/12345");
+    expect(json.getAttribute("data-1")).toBe("/home/12345/dashboard");
+    expect(json.getAttribute("data-2")).toBe(
+      "/home/12345/dashboard/userDashboard"
+    );
   });
 
   test("route title", () => {

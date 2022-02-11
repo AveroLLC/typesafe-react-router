@@ -125,7 +125,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
       >;
     },
     useMap() {
-      const match = useMatch(result.template());
+      const match = result.useParams();
 
       function generateMap(
         _routes?: InternalRoute<string, any>
@@ -141,7 +141,7 @@ function internalRoute<T extends string, Q extends QueryParamDefault>(
           {
             path,
             create: () => {
-              return _routes.create(match?.params);
+              return _routes.create(match);
             },
             title,
           },
