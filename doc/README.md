@@ -1,3 +1,5 @@
+react-route-type / [Exports](modules.md)
+
 # react-route-type
 
 A collection of types and utility functions to facilitate typesafe routing in react-router-dom and react-router-native.
@@ -64,7 +66,7 @@ export const Routes = {
   details: route(["view", ":id"]),
 };
 
-// "/view/:id"
+// route
 <Route path={Routes.details.template()} component={Details} />;
 
 export const Details = () => {
@@ -100,11 +102,9 @@ export const Users = () => {
 
 ```js
 const home = route("home");
-const settings = route("settings").createNestedRoutes((parent)=>({
-   global: parent.route("global");
-   advanced: parent.route("advanced");
-}));
-
+const settings = route("settings", { hasNested: true });
+const settingGlobal = settings.route("global");
+const settingAdvanced = settings.route("advanced");
 // App.js
 function App() {
   return (
@@ -114,26 +114,26 @@ function App() {
         element={<Home />}
       />
       <Route
-        path={settings.root.template()} // "/settings/*"
-        element={<Settings />}
+        path={settings.template()} // "/settings/*"
+        element={<Messages />}
       />
     </Routes>
   );
 }
 
-// Settings.js
-function Settings() {
+// Messages.js
+function Messages() {
   return (
     <Container>
       <Conversations />
 
       <Routes>
         <Route
-          path={setting.global.template()} // "global"
+          path={settingGlobal.template()} // "global"
           element={<Global />}
         />
         <Route
-          path={setting.advanced.template()} // "advanced"
+          path={settingAdvanced.template()} // "advanced"
           element={<Advanced />}
         />
       </Routes>
@@ -144,19 +144,6 @@ function Settings() {
 
 ### useMap
 
-This is useful for create breadcrumb
-
 ```js
-const routeMap = setting.advanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
-
-return (
-  //antd
-  <Breadcrumb>
-    {routeMap.map(({ path, create }) => {
-      <Breadcrumb.Item key={path}>
-        <a href={create()}></a>
-      </Breadcrumb.Item>;
-    })}
-  </Breadcrumb>
-);
+const routeMap = settingAdvanced.useMap(); // [{path:"settings",create=()=>"/settings"},{path:"advanced",create=()=>"/settings/advanced"}]
 ```

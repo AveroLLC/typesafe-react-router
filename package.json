@@ -1,6 +1,6 @@
 {
-  "name": "typesafe-react-router",
-  "version": "2.2.4",
+  "name": "react-route-type",
+  "version": "4.0.0",
   "description": "Type-safe helpers for React-Router",
   "main": "./dest/index.js",
   "types": "./dest/index.d.ts",
@@ -17,24 +17,42 @@
       "name": "Erin Noe-Payne",
       "email": "enoepayne@averoinc.com",
       "url": "https://github.com/autoric"
+    },
+    {
+      "name": "Hossein Mohammadi",
+      "email": "hosseinm.developer@gmail.com",
+      "url": "https://github.com/hosseinmd"
     }
   ],
   "license": "Apache-2.0",
   "scripts": {
     "tsc": "tsc --declaration -outDir dest",
-    "clean": "rm -rf dest",
-    "prepare": "npm run clean && npm run tsc",
-    "test": "jest"
+    "clean": "rimraf dest",
+    "prepare": "yarn clean && yarn tsc",
+    "typedoc": "typedoc src/index.ts",
+    "test": "yarn prepare && jest"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "@types/query-string": "^5.1.0",
-    "jest": "^23.2.0",
-    "ts-jest": "^22.4.6",
-    "typescript": "^3.0.1"
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.2",
+    "@types/qs": "^6.9.5",
+    "@types/react-test-renderer": "^17.0.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.0.2",
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.5.1",
+    "typedoc": "^0.22.10",
+    "typedoc-plugin-markdown": "^3.11.7",
+    "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "typescript": "^3.0.0"
+    "react-router-dom": "6>=",
+    "typescript": "^4.1.5"
   },
   "jest": {
     "transform": {
@@ -51,6 +69,6 @@
     ]
   },
   "dependencies": {
-    "query-string": "^5.1.1"
+    "qs": "^6.10.1"
   }
 }

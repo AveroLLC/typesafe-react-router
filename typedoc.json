@@ -1,0 +1,11 @@
+{
+    "excludeInternal": true,
+    "plugin": [
+        "typedoc-plugin-markdown"
+    ],
+    "entryPoints": [
+        "./src/index.ts",
+        "./src/secondary-entry.ts"
+    ],
+    "out": "doc"
+}

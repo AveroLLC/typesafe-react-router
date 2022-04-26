@@ -1,6 +1,3 @@
-import { route } from '../route';
-import { param } from '../param';
-
 /*
    Copyright Avero, LLC
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,37 +11,75 @@ import { param } from '../param';
    limitations under the License.
  */
 
-export interface Route<
-  Parts extends Array<PathPart<any>>,
-  QueryParams extends string[] = []
-> {
-  template(): string;
-
-  create(
-    params: Record<ParamsFromPathArray<Parts>[number], string> &
-      Partial<{ query: Partial<Record<QueryParams[number], string>> }>
-  ): string;
-
-  withQueryParams: <T extends string[]>(
-    ...params: T
-  ) => Route<Parts, [QueryParams[number] | T[number]]>;
-
-  parse(queryString: string): Partial<Record<QueryParams[number], string>>;
-}
-
-export interface PathParam<T extends string> {
-  param: T;
-}
-
-export type PathPart<T extends string> = string | PathParam<T>;
-
-export type ParamsFromPathArray<T extends Array<PathPart<any>>> = {
-  [K in keyof T]: T[K] extends PathParam<infer ParamName> ? ParamName : never
+type Params<Key extends string = string> = {
+  readonly [key in Key]: string;
 };
 
-// Given the parameters of a route I want an object of { paramName: string }
-// e.g. for const Route = route(['logbook', param('logbookId'), param('otherId')]);
-// RouteParams<Route> = { logbookId: string, otherId: string }
-export type RouteParams<T extends Route<any, any>> = T extends Route<infer X, any>
-  ? Record<ParamsFromPathArray<X>[number], string>
-  : never;
+/**
+ * @ignore
+ */
+export type QueryParamDefault = Record<
+  string,
+  | string
+  | Array<string | Array<any> | Record<string, any> | null>
+  | Record<string, any>
+  | null
+>;
+
+export interface Options<Q extends QueryParamDefault> {
+  query?: Q;
+  title?: string;
+}
+
+export interface Route<
+  Parts extends string,
+  QueryParams extends QueryParamDefault
+> {
+  title?: string;
+  template(): string;
+
+  create: CreateFun<Parts, QueryParams>;
+
+  route: <Parts1 extends string, QueryParams1 extends QueryParamDefault>(
+    arg: Parts1 | Parts1[],
+    option?: Options<QueryParams1>
+  ) => Route<Parts1 | Parts, QueryParams & QueryParams1>;
+
+  useQueryParams(): Partial<QueryParams>;
+
+  useParams(): Required<Params<PathParam<Parts>>>;
+  useMap(): {
+    path: string | string[];
+    title?: string;
+    create(): string;
+  }[];
+  createNestedRoutes: <C>(
+    generator: (parent: Route<Parts, QueryParams>) => C
+  ) => {
+    root: Route<Parts, QueryParams>;
+  } & C;
+}
+
+/**
+ * @ignore
+ */
+export type PathParam<T extends string> = T extends `:${infer A}` ? A : never;
+
+/**
+ * @ignore
+ */
+export type PathPart<T extends string> = string | PathParam<T>;
+
+/**
+ * @ignore
+ */
+export type CreateFun<
+  Parts extends string,
+  QueryParams extends QueryParamDefault
+> = Parts extends `:${infer A}`
+  ? (
+      params: Record<PathParam<Parts>, string> & {
+        query?: Partial<QueryParams>;
+      }
+    ) => string
+  : (params?: { query?: Partial<QueryParams> }) => string;
